@@ -1,7 +1,6 @@
-package queries
+package NeoQueries
 
 import (
-	"NeoQueries"
 	"fmt"
 )
 
@@ -28,14 +27,8 @@ func (p *nestedConditionPart) build(cb *ConditionBuilder) string {
 
 type rawPart string
 
-func (p rawPart) build(cb *ConditionBuilder) string {
+func (p rawPart) build(*ConditionBuilder) string {
 	return string(p)
-}
-
-type stringPart string
-
-func (p stringPart) build(cb *ConditionBuilder) string {
-	return fmt.Sprintf("\"%s\"", p)
 }
 
 type anyPart struct {
@@ -47,7 +40,7 @@ func (p *anyPart) build(cb *ConditionBuilder) string {
 }
 
 type listPart[V any] struct {
-	list *NeoQueries.List[V]
+	list *List[V]
 }
 
 func (p listPart[V]) build(cb *ConditionBuilder) string {
@@ -179,7 +172,7 @@ type ListState[V any] struct {
 	builder *ConditionBuilder
 }
 
-func (p *ListState[V]) List(list *NeoQueries.List[V]) *CompleteCondition {
+func (p *ListState[V]) List(list *List[V]) *CompleteCondition {
 	p.builder.addPart(listPart[V]{list: list})
 	return &CompleteCondition{p.builder}
 }

@@ -1,28 +1,27 @@
-package queries
+package NeoQueries
 
 import (
-	"NeoQueries"
 	"strings"
 )
 
 type MatchBuilder struct {
-	*NeoQueries.Builder
+	*Builder
 	elements []Element
 }
 
-func newMatchBuilder(builder *NeoQueries.Builder, elements []Element) *MatchBuilder {
+func newMatchBuilder(builder *Builder, elements []Element) *MatchBuilder {
 	for _, element := range elements {
 		element.setBuilder(builder)
 	}
 
 	return &MatchBuilder{
-		NeoQueries.Builder: builder,
-		elements:           elements,
+		Builder:  builder,
+		elements: elements,
 	}
 }
 
 func NewMatchBuilder(elements ...Element) *MatchBuilder {
-	return newMatchBuilder(NeoQueries.NewBuilder(), elements)
+	return newMatchBuilder(NewBuilder(), elements)
 }
 
 func (mb *MatchBuilder) build() string {
@@ -43,6 +42,6 @@ func (mb *MatchBuilder) build() string {
 	return b.String()
 }
 
-func (mb *MatchBuilder) setBuilder(builder *NeoQueries.Builder) {
+func (mb *MatchBuilder) setBuilder(builder *Builder) {
 	mb.Builder = builder
 }

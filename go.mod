@@ -1,3 +1,3 @@
-module NeoQueries
+module github.com/deb84/neoqueries
 
-go 1.26
+go 1.27

@@ -1,22 +1,21 @@
-package queries
+package NeoQueries
 
 import (
-	"NeoQueries"
 	"strings"
 )
 
 type QueryBuilder struct {
-	*NeoQueries.Builder
-	parts []NeoQueries.Buildable
+	*Builder
+	parts []Buildable
 }
 
 func NewQueryBuilder() *QueryBuilder {
 	return &QueryBuilder{
-		NeoQueries.Builder: NeoQueries.NewBuilder(),
+		Builder: NewBuilder(),
 	}
 }
 
-func (qb *QueryBuilder) addPart(part NeoQueries.Buildable) {
+func (qb *QueryBuilder) addPart(part Buildable) {
 	qb.parts = append(qb.parts, part)
 }
 
@@ -40,7 +39,7 @@ func (qb *QueryBuilder) Where(condition ConditionBuilderInterface) *QueryBuilder
 	return qb
 }
 
-func (qb *QueryBuilder) Build() (string, NeoQueries.Params) {
+func (qb *QueryBuilder) Build() (string, Params) {
 	var b strings.Builder
 
 	for _, part := range qb.parts {

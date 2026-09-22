@@ -1,25 +1,23 @@
-package queries
-
-import "NeoQueries"
+package NeoQueries
 
 type Element interface {
-	setBuilder(*NeoQueries.Builder)
+	setBuilder(*Builder)
 	build() string
-	GetParams() NeoQueries.Params
+	GetParams() Params
 	GetRef() Ref
 	element()
 }
 type ElementBuilder struct {
-	*NeoQueries.Builder
-	refs  NeoQueries.Refs
-	props *NeoQueries.Props
+	*Builder
+	refs  Refs
+	props *Props
 }
 
 func newElementBuilder() *ElementBuilder {
-	props := make(NeoQueries.Props)
+	props := make(Props)
 
 	return &ElementBuilder{
-		refs:  NeoQueries.newRefs(),
+		refs:  newRefs(),
 		props: &props,
 	}
 }

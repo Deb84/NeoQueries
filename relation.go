@@ -1,7 +1,6 @@
-package queries
+package NeoQueries
 
 import (
-	"NeoQueries"
 	"fmt"
 	"strings"
 )
@@ -52,7 +51,7 @@ func (rb *RelationBuilder) Type(token string) *RelationBuilder {
 	return rb
 }
 
-func (rb *RelationBuilder) Props(props NeoQueries.Props) *RelationBuilder {
+func (rb *RelationBuilder) Props(props Props) *RelationBuilder {
 	rb.props = &props
 	return rb
 }
@@ -90,7 +89,7 @@ func (rb *RelationBuilder) build() string {
 	return b.String()
 }
 
-func (rb *RelationBuilder) setBuilder(builder *NeoQueries.Builder) {
+func (rb *RelationBuilder) setBuilder(builder *Builder) {
 	rb.Builder = builder
 	rb.Nodes.N1.setBuilder(builder)
 	rb.Nodes.N2.setBuilder(builder)

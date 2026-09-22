@@ -1,28 +1,27 @@
-package queries
+package NeoQueries
 
 import (
-	"NeoQueries"
 	"strings"
 )
 
 type CreateBuilder struct {
-	*NeoQueries.Builder
+	*Builder
 	elements []Element
 }
 
-func newCreateBuilder(builder *NeoQueries.Builder, elements []Element) *CreateBuilder {
+func newCreateBuilder(builder *Builder, elements []Element) *CreateBuilder {
 	for _, element := range elements {
 		element.setBuilder(builder)
 	}
 
 	return &CreateBuilder{
-		NeoQueries.Builder: builder,
-		elements:           elements,
+		Builder:  builder,
+		elements: elements,
 	}
 }
 
 func NewCreateBuilder(elements ...Element) *CreateBuilder {
-	return newCreateBuilder(NeoQueries.NewBuilder(), elements)
+	return newCreateBuilder(NewBuilder(), elements)
 }
 
 func (cb *CreateBuilder) build() string {

@@ -1,24 +1,23 @@
-package queries
+package NeoQueries
 
 import (
-	"NeoQueries"
 	"strings"
 )
 
 type ReturnElementsBuilder struct {
-	*NeoQueries.Builder
+	*Builder
 	elements []Element
 }
 
-func newReturnElementsBuilder(builder *NeoQueries.Builder, elements ...Element) *ReturnElementsBuilder {
+func newReturnElementsBuilder(builder *Builder, elements ...Element) *ReturnElementsBuilder {
 	return &ReturnElementsBuilder{
-		NeoQueries.Builder: builder,
-		elements:           elements,
+		Builder:  builder,
+		elements: elements,
 	}
 }
 
 func NewReturnElementsBuilder(elements Element) *ReturnElementsBuilder {
-	return newReturnElementsBuilder(NeoQueries.NewBuilder(), elements)
+	return newReturnElementsBuilder(NewBuilder(), elements)
 }
 
 func (qb *QueryBuilder) ReturnElements(elements ...Element) *QueryBuilder {
@@ -43,24 +42,24 @@ func (rb *ReturnElementsBuilder) build() string {
 	return b.String()
 }
 
-func (rb *ReturnElementsBuilder) setBuilder(builder *NeoQueries.Builder) {
+func (rb *ReturnElementsBuilder) setBuilder(builder *Builder) {
 	rb.Builder = builder
 }
 
 type ReturnBuilder struct {
-	*NeoQueries.Builder
+	*Builder
 	refs []QueryRef
 }
 
-func newReturnBuilder(builder *NeoQueries.Builder, refs ...QueryRef) *ReturnBuilder {
+func newReturnBuilder(builder *Builder, refs ...QueryRef) *ReturnBuilder {
 	return &ReturnBuilder{
-		NeoQueries.Builder: builder,
-		refs:               refs,
+		Builder: builder,
+		refs:    refs,
 	}
 }
 
 func NewReturnBuilder(refs ...QueryRef) *ReturnBuilder {
-	return newReturnBuilder(NeoQueries.NewBuilder(), refs...)
+	return newReturnBuilder(NewBuilder(), refs...)
 }
 
 func (rb *ReturnBuilder) build() string {
@@ -80,6 +79,6 @@ func (rb *ReturnBuilder) build() string {
 	return b.String()
 }
 
-func (rb *ReturnBuilder) setBuilder(builder *NeoQueries.Builder) {
+func (rb *ReturnBuilder) setBuilder(builder *Builder) {
 	rb.Builder = builder
 }

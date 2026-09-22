@@ -1,6 +1,8 @@
-package queries
+package NeoQueries
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type Params map[Ref]any
 type Props map[Ref]string

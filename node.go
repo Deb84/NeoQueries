@@ -1,7 +1,6 @@
-package queries
+package NeoQueries
 
 import (
-	"NeoQueries"
 	"fmt"
 	"strings"
 )
@@ -25,7 +24,7 @@ func (nb *NodeBuilder) Label(label string) *NodeBuilder {
 	return nb
 }
 
-func (nb *NodeBuilder) Props(props NeoQueries.Props) *NodeBuilder {
+func (nb *NodeBuilder) Props(props Props) *NodeBuilder {
 	nb.props = &props
 	return nb
 }
@@ -70,7 +69,7 @@ func (nb *NodeBuilder) build() string {
 	return b.String()
 }
 
-func (nb *NodeBuilder) setBuilder(builder *NeoQueries.Builder) {
+func (nb *NodeBuilder) setBuilder(builder *Builder) {
 	nb.Builder = builder
 }
 
@@ -119,7 +118,7 @@ func (ap *AccessKey) ToUpper() *AccessKey {
 	return ap
 }
 
-func (ap *AccessKey) toRef(builder *NeoQueries.Builder) Ref {
+func (ap *AccessKey) toRef(builder *Builder) Ref {
 	ap.owner.build()
 	ref := ap.owner.GetRef()
 

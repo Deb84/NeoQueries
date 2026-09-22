@@ -1,17 +1,16 @@
-package queries
+package NeoQueries
 
 import (
-	"NeoQueries"
 	"strings"
 )
 
 type ConditionBuilderInterface interface {
 	buildCondition() string
-	setBuilder(builder *NeoQueries.Builder)
+	setBuilder(builder *Builder)
 }
 
 type ConditionBuilder struct {
-	*NeoQueries.Builder
+	*Builder
 	parts []conditionPart
 }
 
@@ -38,6 +37,6 @@ func (cb *ConditionBuilder) buildCondition() string {
 	return b.String()
 }
 
-func (cb *ConditionBuilder) setBuilder(builder *NeoQueries.Builder) {
+func (cb *ConditionBuilder) setBuilder(builder *Builder) {
 	cb.Builder = builder
 }

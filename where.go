@@ -1,21 +1,20 @@
-package queries
+package NeoQueries
 
 import (
-	"NeoQueries"
 	"strings"
 )
 
 type WhereBuilder struct {
-	*NeoQueries.Builder
+	*Builder
 	condition ConditionBuilderInterface
 }
 
-func newWhereBuilder(builder *NeoQueries.Builder, condition ConditionBuilderInterface) *WhereBuilder {
+func newWhereBuilder(builder *Builder, condition ConditionBuilderInterface) *WhereBuilder {
 	condition.setBuilder(builder)
 
 	return &WhereBuilder{
-		NeoQueries.Builder: builder,
-		condition:          condition,
+		Builder:   builder,
+		condition: condition,
 	}
 }
 
@@ -35,6 +34,6 @@ func (wb *WhereBuilder) build() string {
 	return b.String()
 }
 
-func (wb *WhereBuilder) setBuilder(builder *NeoQueries.Builder) {
+func (wb *WhereBuilder) setBuilder(builder *Builder) {
 	wb.Builder = builder
 }

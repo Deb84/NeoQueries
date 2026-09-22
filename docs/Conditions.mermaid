@@ -1,0 +1,37 @@
+flowchart TD
+    START --> |"Not()"| START
+
+    START --> |"String()"| START_STR
+
+    START --> |"Value(T)"| ANY["ANY[T]"]
+    START --> |"Ref()"| START_REF
+
+    START_REF --> START_STR
+    START_REF -->|any| ANY
+
+    START_STR --> |"StartsWith()"| STR_COMPARISON
+    START_STR --> |"EndsWith()"| STR_COMPARISON
+    START_STR --> |"Contains()"| STR_COMPARISON
+
+    STR_COMPARISON --> |"String()"| COMPLETE
+    STR_COMPARISON --> |"Ref()"| COMPLETE
+
+    ANY --> |"In()"| LIST["LIST[T]"]
+    ANY --> |"IsNull()"| COMPLETE
+    ANY --> |"IsNotNull()"| COMPLETE
+    ANY --> |= eq| COMPARISON["COMPARISON[T]"]
+    ANY --> |<> neq| COMPARISON
+    ANY --> |> gt| COMPARISON
+    ANY --> |< lt| COMPARISON
+    ANY --> |>= gte| COMPARISON
+    ANY --> |<= lte| COMPARISON
+
+    LIST --> |"List(T)"| COMPLETE
+    LIST --> |"Ref()"| COMPLETE
+
+    COMPARISON --> |"Value(T)"| COMPLETE
+    COMPARISON --> |"Ref()"| COMPLETE
+
+    COMPLETE --> |"And()"| START
+    COMPLETE --> |"Or()"| START
+    COMPLETE --> |"Xor()"| START

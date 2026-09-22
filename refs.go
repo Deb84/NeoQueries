@@ -1,9 +1,7 @@
-package queries
-
-import "NeoQueries"
+package NeoQueries
 
 type QueryRef interface {
-	toRef(b *NeoQueries.Builder) Ref
+	toRef(*Builder) Ref
 }
 
 type Ref string
@@ -12,6 +10,6 @@ func (r Ref) String() string {
 	return string(r)
 }
 
-func (r Ref) toRef(b *NeoQueries.Builder) Ref {
+func (r Ref) toRef(b *Builder) Ref {
 	return r
 }
