@@ -1,9 +1,5 @@
 package NeoQueries
 
-import (
-	"fmt"
-)
-
 type conditionPart interface {
 	build(*ConditionBuilder) string
 }
@@ -178,7 +174,7 @@ func (p *ListState[V]) List(list *List[V]) *CompleteCondition {
 }
 
 func (p *ListState[T]) Ref(value QueryRef) *CompleteCondition {
-	p.builder.addPart(rawPart(fmt.Sprint(value)))
+	p.builder.addPart(&refConditionPart{ref: value})
 	return &CompleteCondition{p.builder}
 }
 
