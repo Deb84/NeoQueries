@@ -59,7 +59,7 @@ func newReturnBuilder(builder *Builder, refs ...QueryRef) *ReturnBuilder {
 }
 
 func NewReturnBuilder(refs ...QueryRef) *ReturnBuilder {
-	return newReturnBuilder(NewBuilder(), refs...)
+	return newReturnBuilder(nil, refs...)
 }
 
 func (rb *ReturnBuilder) build() string {
