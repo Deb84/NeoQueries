@@ -1,4 +1,4 @@
-package NeoQueries
+package neoqueries
 
 import (
 	"strings"

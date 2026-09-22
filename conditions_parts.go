@@ -1,4 +1,4 @@
-package NeoQueries
+package neoqueries
 
 type conditionPart interface {
 	build(*ConditionBuilder) string
