@@ -4,81 +4,66 @@ import (
 	"strings"
 )
 
-type ReturnElementsBuilder struct {
+type ReturnBuilderBuild[T any] func(*ReturnBuilder[T], T) string
+
+type ReturnBuilder[T any] struct {
 	*Builder
-	elements []Element
+	objs      []T
+	buildFunc ReturnBuilderBuild[T]
 }
 
-func newReturnElementsBuilder(builder *Builder, elements ...Element) *ReturnElementsBuilder {
-	return &ReturnElementsBuilder{
-		Builder:  builder,
-		elements: elements,
+func newBaseReturnBuilder[T any](builder *Builder, fun ReturnBuilderBuild[T], obj T, objs []T) *ReturnBuilder[T] {
+	objs = append([]T{obj}, objs...)
+
+	return &ReturnBuilder[T]{
+		Builder:   builder,
+		objs:      objs,
+		buildFunc: fun,
 	}
 }
 
-func NewReturnElementsBuilder(elements Element) *ReturnElementsBuilder {
-	return newReturnElementsBuilder(NewBuilder(), elements)
+func newReturnBuilder[T QueryRef](builder *Builder, ref T, refs []T) *ReturnBuilder[T] {
+	return newBaseReturnBuilder(builder, returnBuild[T], ref, refs)
 }
 
-func (qb *QueryBuilder) ReturnElements(elements ...Element) *QueryBuilder {
-	qb.addPart(newReturnElementsBuilder(qb.Builder, elements...))
-	return qb
+func newReturnElementBuilder[T Element](builder *Builder, ref T, refs []T) *ReturnBuilder[T] {
+	return newBaseReturnBuilder(builder, returnElementBuild[T], ref, refs)
 }
 
-func (rb *ReturnElementsBuilder) build() string {
+func NewReturnBuilder[T QueryRef](ref T, refs ...T) *ReturnBuilder[T] {
+	return newReturnBuilder(nil, ref, refs)
+}
+
+func NewReturnElementBuilder[T Element](element T, elements ...T) *ReturnBuilder[T] {
+	return newReturnElementBuilder(nil, element, elements)
+}
+
+func (b *ReturnBuilder[T]) build() string {
 	query := `RETURN`
-	var b strings.Builder
+	var s strings.Builder
 
-	b.WriteString(query)
-	b.WriteByte(' ')
+	s.WriteString(query)
+	s.WriteByte(' ')
 
-	for i, element := range rb.elements {
+	for i, obj := range b.objs {
 		if i > 0 {
-			b.WriteByte(',')
+			s.WriteByte(',')
 		}
-		b.WriteString(element.GetRef().String())
+		s.WriteString(b.buildFunc(b, obj))
 	}
 
-	return b.String()
+	return s.String()
 }
 
-func (rb *ReturnElementsBuilder) setBuilder(builder *Builder) {
-	rb.Builder = builder
+func (b *ReturnBuilder[T]) setBuilder(builder *Builder) {
+	b.Builder = builder
 }
 
-type ReturnBuilder struct {
-	*Builder
-	refs []QueryRef
+func returnBuild[T QueryRef](b *ReturnBuilder[T], ref T) string {
+	return ref.toRef(b.Builder).String()
 }
 
-func newReturnBuilder(builder *Builder, refs ...QueryRef) *ReturnBuilder {
-	return &ReturnBuilder{
-		Builder: builder,
-		refs:    refs,
-	}
-}
-
-func NewReturnBuilder(refs ...QueryRef) *ReturnBuilder {
-	return newReturnBuilder(nil, refs...)
-}
-
-func (rb *ReturnBuilder) build() string {
-	query := `RETURN`
-	var b strings.Builder
-
-	b.WriteString(query)
-	b.WriteByte(' ')
-
-	for i, ref := range rb.refs {
-		if i > 0 {
-			b.WriteByte(',')
-		}
-		b.WriteString(ref.toRef(rb.Builder).String())
-	}
-
-	return b.String()
-}
-
-func (rb *ReturnBuilder) setBuilder(builder *Builder) {
-	rb.Builder = builder
+func returnElementBuild[T Element](b *ReturnBuilder[T], element T) string {
+	ref, _ := element.GetRef() // TODO: error handling
+	return ref.String()
 }

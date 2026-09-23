@@ -29,8 +29,13 @@ func (qb *QueryBuilder) Match(element Element, elements ...Element) *QueryBuilde
 	return qb
 }
 
-func (qb *QueryBuilder) Return(refs ...QueryRef) *QueryBuilder {
-	qb.addPart(newReturnBuilder(qb.Builder, refs...))
+func (qb *QueryBuilder) Return(ref QueryRef, refs ...QueryRef) *QueryBuilder {
+	qb.addPart(newReturnBuilder(qb.Builder, ref, refs))
+	return qb
+}
+
+func (qb *QueryBuilder) ReturnElement(element Element, elements ...Element) *QueryBuilder {
+	qb.addPart(newReturnElementBuilder(qb.Builder, element, elements))
 	return qb
 }
 
