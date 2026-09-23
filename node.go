@@ -120,7 +120,7 @@ func (ap *AccessKey) ToUpper() *AccessKey {
 
 func (ap *AccessKey) toRef(builder *Builder) Ref {
 	ap.owner.build()
-	ref := ap.owner.GetRef()
+	ref, _ := ap.owner.GetRef() // TODO: error handling
 
 	template := "%s[$%s]"
 	fieldRef := builder.nextTokenRef(ap.key)

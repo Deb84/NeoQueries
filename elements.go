@@ -1,10 +1,14 @@
 package neoqueries
 
+import (
+	"errors"
+)
+
 type Element interface {
 	setBuilder(*Builder)
 	build() string
 	GetParams() Params
-	GetRef() Ref
+	GetRef() (Ref, error)
 	element()
 }
 type ElementBuilder struct {
@@ -22,6 +26,10 @@ func newElementBuilder() *ElementBuilder {
 	}
 }
 
-func (eb *ElementBuilder) GetRef() Ref {
-	return eb.refs.element
+func (eb *ElementBuilder) GetRef() (Ref, error) {
+	if eb.refs.element != "" {
+		return eb.refs.element, nil
+	}
+
+	return "", errors.New("this element doesn't have reference, element need to be built")
 }
