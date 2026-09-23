@@ -19,13 +19,13 @@ func (qb *QueryBuilder) addPart(part Buildable) {
 	qb.parts = append(qb.parts, part)
 }
 
-func (qb *QueryBuilder) Create(elements ...Element) *QueryBuilder {
-	qb.addPart(newCreateBuilder(qb.Builder, elements))
+func (qb *QueryBuilder) Create(element Element, elements ...Element) *QueryBuilder {
+	qb.addPart(newCreateBuilder(qb.Builder, element, elements))
 	return qb
 }
 
-func (qb *QueryBuilder) Match(element ...Element) *QueryBuilder {
-	qb.addPart(newMatchBuilder(qb.Builder, element))
+func (qb *QueryBuilder) Match(element Element, elements ...Element) *QueryBuilder {
+	qb.addPart(newMatchBuilder(qb.Builder, element, elements))
 	return qb
 }
 

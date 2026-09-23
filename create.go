@@ -9,9 +9,11 @@ type CreateBuilder struct {
 	elements []Element
 }
 
-func newCreateBuilder(builder *Builder, elements []Element) *CreateBuilder {
-	for _, element := range elements {
-		element.setBuilder(builder)
+func newCreateBuilder(builder *Builder, element Element, elements []Element) *CreateBuilder {
+	elements = append([]Element{element}, elements...)
+
+	for _, e := range elements {
+		e.setBuilder(builder)
 	}
 
 	return &CreateBuilder{
@@ -20,8 +22,8 @@ func newCreateBuilder(builder *Builder, elements []Element) *CreateBuilder {
 	}
 }
 
-func NewCreateBuilder(elements ...Element) *CreateBuilder {
-	return newCreateBuilder(NewBuilder(), elements)
+func NewCreateBuilder(element Element, elements ...Element) *CreateBuilder {
+	return newCreateBuilder(NewBuilder(), element, elements)
 }
 
 func (cb *CreateBuilder) build() string {

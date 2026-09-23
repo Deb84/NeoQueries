@@ -9,9 +9,11 @@ type MatchBuilder struct {
 	elements []Element
 }
 
-func newMatchBuilder(builder *Builder, elements []Element) *MatchBuilder {
-	for _, element := range elements {
-		element.setBuilder(builder)
+func newMatchBuilder(builder *Builder, element Element, elements []Element) *MatchBuilder {
+	elements = append(elements, element)
+
+	for _, e := range elements {
+		e.setBuilder(builder)
 	}
 
 	return &MatchBuilder{
@@ -20,8 +22,8 @@ func newMatchBuilder(builder *Builder, elements []Element) *MatchBuilder {
 	}
 }
 
-func NewMatchBuilder(elements ...Element) *MatchBuilder {
-	return newMatchBuilder(NewBuilder(), elements)
+func NewMatchBuilder(element Element, elements ...Element) *MatchBuilder {
+	return newMatchBuilder(NewBuilder(), element, elements)
 }
 
 func (mb *MatchBuilder) build() string {
