@@ -24,6 +24,16 @@ func (qb *QueryBuilder) Create(element Element, elements ...Element) *QueryBuild
 	return qb
 }
 
+func (qb *QueryBuilder) Delete(element Element, elements ...Element) *QueryBuilder {
+	qb.addPart(newDeleteBuilder(qb.Builder, element, elements))
+	return qb
+}
+
+func (qb *QueryBuilder) DetachDelete(element Element, elements ...Element) *QueryBuilder {
+	qb.addPart(newDetachDeleteBuilder(qb.Builder, element, elements))
+	return qb
+}
+
 func (qb *QueryBuilder) Match(element Element, elements ...Element) *QueryBuilder {
 	qb.addPart(newMatchBuilder(qb.Builder, element, elements))
 	return qb
