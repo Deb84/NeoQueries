@@ -5,19 +5,27 @@ type conditionPart interface {
 }
 
 type refConditionPart struct {
-	ref QueryRef
+	ref *UnbuiltRef
 }
 
 func (p *refConditionPart) build(cb *ConditionBuilder) string {
-	return p.ref.toRef(cb.Builder).String()
+	return p.ref.buildRef(cb.builder).String()
+}
+
+type propConditionPart struct {
+	prop *UnbuiltProp
+}
+
+func (p *propConditionPart) build(cb *ConditionBuilder) string {
+	return p.prop.buildRef(cb.builder).String()
 }
 
 type nestedConditionPart struct {
-	condition ConditionBuilderInterface
+	condition *ConditionBuilder
 }
 
 func (p *nestedConditionPart) build(cb *ConditionBuilder) string {
-	p.condition.setBuilder(cb.Builder)
+	p.condition.setBuilder(cb.builder)
 	return "(" + p.condition.buildCondition() + ")"
 }
 
@@ -32,7 +40,7 @@ type anyPart struct {
 }
 
 func (p *anyPart) build(cb *ConditionBuilder) string {
-	return cb.nextValueRef(p.value).String()
+	return cb.builder.nextValueRef(p.value).String()
 }
 
 type listPart[V any] struct {
@@ -40,6 +48,6 @@ type listPart[V any] struct {
 }
 
 func (p listPart[V]) build(cb *ConditionBuilder) string {
-	ref := cb.nextListRef(p.list)
+	ref := cb.builder.nextListRef(p.list)
 	return "$" + ref.String()
 }

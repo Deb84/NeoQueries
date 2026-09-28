@@ -6,23 +6,23 @@ import (
 
 type CreateBuilder struct {
 	*Builder
-	elements []Element
+	patterns []PatternInterface
 }
 
-func newCreateBuilder(builder *Builder, element Element, elements []Element) *CreateBuilder {
-	elements = append([]Element{element}, elements...)
+func newCreateBuilder(builder *Builder, pattern PatternInterface, patterns []PatternInterface) *CreateBuilder {
+	patterns = append([]PatternInterface{pattern}, patterns...)
 
-	for _, e := range elements {
+	for _, e := range patterns {
 		e.setBuilder(builder)
 	}
 
 	return &CreateBuilder{
 		Builder:  builder,
-		elements: elements,
+		patterns: patterns,
 	}
 }
 
-func NewCreateBuilder(element Element, elements ...Element) *CreateBuilder {
+func NewCreateBuilder(element PatternInterface, elements ...PatternInterface) *CreateBuilder {
 	return newCreateBuilder(NewBuilder(), element, elements)
 }
 
@@ -34,11 +34,11 @@ func (cb *CreateBuilder) build() string {
 	b.WriteString(query)
 	b.WriteByte(' ')
 
-	for i, element := range cb.elements {
+	for i, pattern := range cb.patterns {
 		if i > 0 {
 			b.WriteString(", ")
 		}
-		b.WriteString(element.build())
+		b.WriteString(pattern.build().string())
 	}
 
 	return b.String()

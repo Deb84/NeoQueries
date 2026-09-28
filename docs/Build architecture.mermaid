@@ -1,0 +1,68 @@
+flowchart TD
+    Start --> |"Build()"| QueryBuilder
+
+    QueryBuilder --> |"build()"| Create
+    QueryBuilder --> |"build()"| Delete
+    QueryBuilder --> |"build()"| DetachDelete
+    QueryBuilder --> |"build()"| Match
+    QueryBuilder --> |"build()"| Return
+    QueryBuilder --> |"build()"| ReturnElement
+    QueryBuilder --> |"build()"| Where
+
+    Create --> CreateBuilder
+    Delete --> |"query = DELETE"| DeleteBuilder
+    DetachDelete --> |"query = DETACH DELETE"| DeleteBuilder
+    Match --> MatchBuilder
+    Return --> |"buildFunc = returnBuild"| ReturnBuilder
+    ReturnElement --> |"buildFunc = returnElementBuild"| ReturnBuilder
+    Where --> WhereBuilder
+
+    PatternInterface(PatternInterface)
+    ElementInterface(ElementInterface)
+    UnbuiltPropOrVar("UnbuiltPropOrVar[T]")
+
+    CreateBuilder --> |"build()"| PatternInterface
+    DeleteBuilder --> |"buildElement()"| ElementInterface
+    MatchBuilder --> |"build()"| PatternInterface
+    ReturnBuilder --> |"build()"| buildFunc(buildFunc)
+    WhereBuilder --> |"buildCondition()"| ConditionBuilder
+
+    buildFunc --> returnBuild("returnBuild")
+    buildFunc --> returnElementBuild("returnElementBuild")
+
+    returnBuild --> |"buildRef()"| UnbuiltPropOrVar
+    returnElementBuild --> |"getRef()"| ElementInterface
+
+
+    PatternInterface --> NodePattern
+    PatternInterface -->  RelationPattern
+
+    NodePattern --> |"buildElement()"| Node
+    RelationPattern --> |"buildElement()"| Relation
+
+    ElementInterface --> Node
+    ElementInterface --> Relation
+
+    Node --> |"nextNodeRef()"| Builder
+    Relation --> |"nextRelationRef()"| Builder
+
+    ConditionBuilder --> |"build()"| conditionPart("conditionPart")
+
+    conditionPart --> anyPart
+    conditionPart --> listPart
+    conditionPart --> nestedConditionPart
+    conditionPart --> propConditionPart
+    conditionPart --> rawPart
+    conditionPart --> refConditionPart
+
+    refConditionPart --> |"buildRef()"| UnbuiltRef
+    propConditionPart --> |"buildRef()"| UnbuiltProp
+    nestedConditionPart --> |"buildCondition()"| ConditionBuilder
+    anyPart --> |"nextValueRef()"| Builder
+    listPart --> |"nextListRef()"| Builder
+
+    UnbuiltPropOrVar --> UnbuiltProp
+    UnbuiltPropOrVar --> UnbuiltRef
+
+    UnbuiltRef --> |"buildElement()"| ElementInterface
+    UnbuiltProp --> |"nextTokenRef()"| Builder

@@ -19,32 +19,32 @@ func (qb *QueryBuilder) addPart(part Buildable) {
 	qb.parts = append(qb.parts, part)
 }
 
-func (qb *QueryBuilder) Create(element Element, elements ...Element) *QueryBuilder {
-	qb.addPart(newCreateBuilder(qb.Builder, element, elements))
+func (qb *QueryBuilder) Create(pattern PatternInterface, patterns ...PatternInterface) *QueryBuilder {
+	qb.addPart(newCreateBuilder(qb.Builder, pattern, patterns))
 	return qb
 }
 
-func (qb *QueryBuilder) Delete(element Element, elements ...Element) *QueryBuilder {
+func (qb *QueryBuilder) Delete(element ElementInterface, elements ...ElementInterface) *QueryBuilder {
 	qb.addPart(newDeleteBuilder(qb.Builder, element, elements))
 	return qb
 }
 
-func (qb *QueryBuilder) DetachDelete(element Element, elements ...Element) *QueryBuilder {
+func (qb *QueryBuilder) DetachDelete(element ElementInterface, elements ...ElementInterface) *QueryBuilder {
 	qb.addPart(newDetachDeleteBuilder(qb.Builder, element, elements))
 	return qb
 }
 
-func (qb *QueryBuilder) Match(element Element, elements ...Element) *QueryBuilder {
-	qb.addPart(newMatchBuilder(qb.Builder, element, elements))
+func (qb *QueryBuilder) Match(pattern PatternInterface, patterns ...PatternInterface) *QueryBuilder {
+	qb.addPart(newMatchBuilder(qb.Builder, pattern, patterns))
 	return qb
 }
 
-func (qb *QueryBuilder) Return(ref QueryRef, refs ...QueryRef) *QueryBuilder {
+func (qb *QueryBuilder) Return[T UnbuiltPropOrVar](ref T, refs ...T) *QueryBuilder {
 	qb.addPart(newReturnBuilder(qb.Builder, ref, refs))
 	return qb
 }
 
-func (qb *QueryBuilder) ReturnElement(element Element, elements ...Element) *QueryBuilder {
+func (qb *QueryBuilder) ReturnElement(element ElementInterface, elements ...ElementInterface) *QueryBuilder {
 	qb.addPart(newReturnElementBuilder(qb.Builder, element, elements))
 	return qb
 }

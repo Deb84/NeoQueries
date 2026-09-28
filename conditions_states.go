@@ -14,8 +14,13 @@ func (c *ConditionStart) Value[T any](value T) *AnyState[T] {
 	return &AnyState[T]{builder: c.builder}
 }
 
-func (c *ConditionStart) Ref(value QueryRef) *StartRef {
-	c.builder.addPart(&refConditionPart{ref: value})
+func (c *ConditionStart) Prop(value *UnbuiltProp) *StartRef {
+	c.builder.addPart(&propConditionPart{prop: value})
+	return newStartRef(c.builder)
+}
+
+func (c *ConditionStart) Element(value ElementInterface) *StartRef {
+	c.builder.addPart(&refConditionPart{ref: value.GetRef()})
 	return newStartRef(c.builder)
 }
 
@@ -61,8 +66,8 @@ type EndString struct {
 	builder *ConditionBuilder
 }
 
-func (p *EndString) Ref(value QueryRef) *CompleteCondition {
-	p.builder.addPart(&refConditionPart{ref: value})
+func (p *EndString) Prop(value *UnbuiltProp) *CompleteCondition {
+	p.builder.addPart(&propConditionPart{prop: value})
 	return &CompleteCondition{p.builder}
 }
 
@@ -129,8 +134,8 @@ func (p *ListState[V]) List(list *List[V]) *CompleteCondition {
 	return &CompleteCondition{p.builder}
 }
 
-func (p *ListState[T]) Ref(value QueryRef) *CompleteCondition {
-	p.builder.addPart(&refConditionPart{ref: value})
+func (p *ListState[T]) Prop(value *UnbuiltProp) *CompleteCondition {
+	p.builder.addPart(&propConditionPart{prop: value})
 	return &CompleteCondition{p.builder}
 }
 
@@ -138,8 +143,8 @@ type Comparison[T any] struct {
 	builder *ConditionBuilder
 }
 
-func (p *Comparison[T]) Ref(value QueryRef) *CompleteCondition {
-	p.builder.addPart(&refConditionPart{ref: value})
+func (p *Comparison[T]) Prop(value *UnbuiltProp) *CompleteCondition {
+	p.builder.addPart(&propConditionPart{prop: value})
 	return &CompleteCondition{p.builder}
 }
 

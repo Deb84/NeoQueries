@@ -13,18 +13,6 @@ type Buildable interface {
 	GetParams() Params
 }
 
-type Refs struct {
-	element Ref
-	props   Ref
-	token   map[string]Ref
-}
-
-func newRefs() Refs {
-	return Refs{
-		token: make(map[string]Ref),
-	}
-}
-
 type Builder struct {
 	builtRefs map[any]Ref
 	params    Params
@@ -62,10 +50,10 @@ func (b *Builder) addToParams(obj any, ref Ref) {
 	b.params[ref] = obj
 }
 
-func (b *Builder) nextNodeRef(element *NodeBuilder) Ref {
+func (b *Builder) nextNodeRef(element *Node) Ref {
 	return b.next(element, NodeRef, &b.nodeID)
 }
-func (b *Builder) nextRelationRef(element *RelationBuilder) Ref {
+func (b *Builder) nextRelationRef(element *Relation) Ref {
 	return b.next(element, RelationRef, &b.relationID)
 }
 func (b *Builder) nextTokenRef(value string) Ref {

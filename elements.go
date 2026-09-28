@@ -1,35 +1,19 @@
 package neoqueries
 
-import (
-	"errors"
-)
-
-type Element interface {
+type ElementInterface interface {
 	setBuilder(*Builder)
-	build() string
-	GetParams() Params
-	GetRef() (Ref, error)
-	element()
+	buildElement() Ref
+	getRef() Ref
+	GetRef() *UnbuiltRef
 }
-type ElementBuilder struct {
-	*Builder
-	refs  Refs
-	props *Props
+type Element struct {
+	builder *Builder
 }
 
-func newElementBuilder() *ElementBuilder {
-	props := make(Props)
-
-	return &ElementBuilder{
-		refs:  newRefs(),
-		props: &props,
-	}
+func newElement() *Element {
+	return &Element{}
 }
 
-func (eb *ElementBuilder) GetRef() (Ref, error) {
-	if eb.refs.element != "" {
-		return eb.refs.element, nil
-	}
-
-	return "", errors.New("this element doesn't have reference, element need to be built")
+func (e *Element) setBuilder(builder *Builder) {
+	e.builder = builder
 }

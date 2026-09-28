@@ -10,8 +10,8 @@ type ConditionBuilderInterface interface {
 }
 
 type ConditionBuilder struct {
-	*Builder
-	parts []conditionPart
+	builder *Builder
+	parts   []conditionPart
 }
 
 func NewConditionBuilder() *ConditionStart {
@@ -38,5 +38,5 @@ func (cb *ConditionBuilder) buildCondition() string {
 }
 
 func (cb *ConditionBuilder) setBuilder(builder *Builder) {
-	cb.Builder = builder
+	cb.builder = builder
 }
