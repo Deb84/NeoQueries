@@ -29,6 +29,11 @@ func (c *ConditionStart) Condition(value *ConditionBuilder) *CompleteCondition {
 	return &CompleteCondition{c.builder}
 }
 
+func (p *ConditionStart) Not() *ConditionStart {
+	p.builder.addPart(rawPart("NOT"))
+	return &ConditionStart{builder: p.builder}
+}
+
 type StartRef struct {
 	builder *ConditionBuilder
 	*AnyState[any]
@@ -169,10 +174,5 @@ func (p *CompleteCondition) Or() *ConditionStart {
 
 func (p *CompleteCondition) Xor() *ConditionStart {
 	p.addPart(rawPart("XOR"))
-	return &ConditionStart{builder: p.ConditionBuilder}
-}
-
-func (p *CompleteCondition) Not() *ConditionStart {
-	p.addPart(rawPart("NOT"))
 	return &ConditionStart{builder: p.ConditionBuilder}
 }
