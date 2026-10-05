@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-type Params map[Ref]any
+type Params map[string]any
 type Props map[Ref]string
 type List[V any] []V
 
@@ -47,7 +47,7 @@ func (b *Builder) next(obj any, ref Ref, id *int) Ref {
 }
 
 func (b *Builder) addToParams(obj any, ref Ref) {
-	b.params[ref] = obj
+	b.params[ref.String()] = obj
 }
 
 func (b *Builder) nextNodeRef(element *Node) Ref {
