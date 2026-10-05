@@ -65,9 +65,9 @@ type StartPatternState struct {
 	pattern *Pattern
 }
 
-func (p *StartPatternState) Node(node *NodePattern) *NodePatternState {
+func (p *StartPatternState) Node(node *NodePattern) *CompletePatternState {
 	p.pattern.addPart(node)
-	return &NodePatternState{p.pattern}
+	return newCompletePatternState(p.pattern)
 }
 
 type NodePatternState struct {
@@ -85,13 +85,17 @@ type RelationPatternState struct {
 
 func (r *RelationPatternState) Node(node *NodePattern) *CompletePatternState {
 	r.pattern.addPart(node)
-	return &CompletePatternState{
-		Pattern:          r.pattern,
-		NodePatternState: &NodePatternState{r.pattern},
-	}
+	return newCompletePatternState(r.pattern)
 }
 
 type CompletePatternState struct {
 	*Pattern
 	*NodePatternState
+}
+
+func newCompletePatternState(pattern *Pattern) *CompletePatternState {
+	return &CompletePatternState{
+		Pattern:          pattern,
+		NodePatternState: &NodePatternState{pattern},
+	}
 }

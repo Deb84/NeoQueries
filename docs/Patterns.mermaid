@@ -1,5 +1,5 @@
 flowchart TD
-    StartPatternState --> |"Node()"| NodePatternState
+    StartPatternState --> |"Node()"| CompletePatternState
     NodePatternState --> |"Relation()"| RelationPatternState
     RelationPatternState --> |"Node()"| CompletePatternState
     CompletePatternState --> NodePatternState
