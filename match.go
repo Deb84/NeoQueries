@@ -23,7 +23,7 @@ func newMatchBuilder(builder *Builder, pattern PatternInterface, patterns []Patt
 }
 
 func NewMatchBuilder(pattern PatternInterface, patterns ...PatternInterface) *MatchBuilder {
-	return newMatchBuilder(NewBuilder(), pattern, patterns)
+	return newMatchBuilder(nil, pattern, patterns)
 }
 
 func (mb *MatchBuilder) build() string {
