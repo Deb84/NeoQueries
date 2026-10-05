@@ -166,3 +166,13 @@ func (p *CompleteCondition) Or() *ConditionStart {
 	p.addPart(rawPart("OR"))
 	return &ConditionStart{builder: p.ConditionBuilder}
 }
+
+func (p *CompleteCondition) Xor() *ConditionStart {
+	p.addPart(rawPart("XOR"))
+	return &ConditionStart{builder: p.ConditionBuilder}
+}
+
+func (p *CompleteCondition) Not() *ConditionStart {
+	p.addPart(rawPart("NOT"))
+	return &ConditionStart{builder: p.ConditionBuilder}
+}
