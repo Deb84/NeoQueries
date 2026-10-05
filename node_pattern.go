@@ -34,8 +34,8 @@ func (p *NodePattern) Label(label string) *NodePattern {
 	return p
 }
 
-func (p *NodePattern) Props(props Props) *NodePattern {
-	p.props = &props
+func (p *NodePattern) Props(props *Props) *NodePattern {
+	p.props = props
 	return p
 }
 
