@@ -5,11 +5,13 @@ import (
 	"fmt"
 )
 
-type PropOrVar interface {
+type PropOrRef interface {
+	Prop | Ref
 	String() string
 }
-type UnbuiltPropOrVar interface {
-	buildRef(builder *Builder) PropOrVar
+
+type UnbuiltPropOrVar[T PropOrRef] interface {
+	buildRef(builder *Builder) T
 }
 
 type Ref string

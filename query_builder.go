@@ -39,7 +39,7 @@ func (qb *QueryBuilder) Match(pattern PatternInterface, patterns ...PatternInter
 	return qb
 }
 
-func (qb *QueryBuilder) Return[T UnbuiltPropOrVar](ref T, refs ...T) *QueryBuilder {
+func (qb *QueryBuilder) Return[U PropOrRef, T UnbuiltPropOrVar[U]](ref T, refs ...T) *QueryBuilder {
 	qb.addPart(newReturnBuilder(qb.Builder, ref, refs))
 	return qb
 }
