@@ -40,7 +40,7 @@ type anyPart struct {
 }
 
 func (p *anyPart) build(cb *ConditionBuilder) string {
-	return cb.builder.nextValueRef(p.value).String()
+	return "$" + cb.builder.nextValueRef(p.value).String()
 }
 
 type listPart[V any] struct {
@@ -48,6 +48,5 @@ type listPart[V any] struct {
 }
 
 func (p listPart[V]) build(cb *ConditionBuilder) string {
-	ref := cb.builder.nextListRef(p.list)
-	return "$" + ref.String()
+	return "$" + cb.builder.nextListRef(p.list).String()
 }
