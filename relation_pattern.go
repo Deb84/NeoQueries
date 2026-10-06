@@ -52,8 +52,8 @@ func (p *RelationPattern) build(builder *Builder) PatternString {
 	}
 
 	if len(*p.props) > 0 {
-		p.propsRef = builder.ensurePropsRef(p.props)
-		b.WriteString(" $" + p.propsRef.String())
+		propsRef := builder.ensurePropsRef(p.props)
+		b.WriteString(" $" + propsRef.String())
 	}
 
 	b.WriteByte(']')

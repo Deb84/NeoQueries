@@ -18,7 +18,6 @@ type patternPartInterface interface {
 
 type patternPart struct {
 	props    *Props
-	propsRef Ref
 	tokenRef map[string]Ref
 }
 
