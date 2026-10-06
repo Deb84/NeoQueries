@@ -31,8 +31,7 @@ func newPatternPart() *patternPart {
 }
 
 type Pattern struct {
-	parts   []patternPartInterface
-	builder *Builder
+	parts []patternPartInterface
 }
 
 func NewPattern() *StartPatternState {
@@ -54,10 +53,6 @@ func (p *Pattern) build(builder *Builder) PatternString {
 	}
 
 	return PatternString(b.String())
-}
-
-func (p *Pattern) setBuilder(builder *Builder) {
-	p.builder = builder
 }
 
 type StartPatternState struct {
