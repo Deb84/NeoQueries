@@ -5,7 +5,6 @@ import (
 )
 
 type WhereBuilder struct {
-	*Builder
 	condition ConditionBuilderInterface
 }
 
