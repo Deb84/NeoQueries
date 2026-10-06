@@ -27,11 +27,11 @@ flowchart TD
     ReturnBuilder --> |"build()"| buildFunc(buildFunc)
     WhereBuilder --> |"buildCondition()"| ConditionBuilder
 
-    buildFunc --> returnBuild("returnBuild")
     buildFunc --> returnElementBuild("returnElementBuild")
+    buildFunc --> returnBuild("returnBuild")
 
     returnBuild --> |"buildRef()"| UnbuiltPropOrVar
-    returnElementBuild --> |"getRef()"| ElementInterface
+    returnElementBuild --> |"buildElement()"| ElementInterface
 
 
     PatternInterface --> NodePattern
@@ -43,26 +43,26 @@ flowchart TD
     ElementInterface --> Node
     ElementInterface --> Relation
 
-    Node --> |"nextNodeRef()"| Builder
-    Relation --> |"nextRelationRef()"| Builder
+    Node --> |"ensureNodeRef()"| Builder
+    Relation --> |"ensureRelationRef()"| Builder
 
     ConditionBuilder --> |"build()"| conditionPart("conditionPart")
 
-    conditionPart --> anyPart
+    conditionPart --> propConditionPart
     conditionPart --> listPart
     conditionPart --> nestedConditionPart
-    conditionPart --> propConditionPart
     conditionPart --> rawPart
     conditionPart --> refConditionPart
+    conditionPart --> anyPart
 
-    refConditionPart --> |"buildRef()"| UnbuiltRef
     propConditionPart --> |"buildRef()"| UnbuiltProp
     nestedConditionPart --> |"buildCondition()"| ConditionBuilder
-    anyPart --> |"nextValueRef()"| Builder
-    listPart --> |"nextListRef()"| Builder
+    listPart --> |"ensureListRef()"| Builder
+    anyPart --> |"ensureValueRef()"| Builder
+    refConditionPart --> |"buildRef()"| UnbuiltRef
 
     UnbuiltPropOrVar --> UnbuiltProp
     UnbuiltPropOrVar --> UnbuiltRef
 
     UnbuiltRef --> |"buildElement()"| ElementInterface
-    UnbuiltProp --> |"nextTokenRef()"| Builder
+    UnbuiltProp --> |"ensureTokenRef()"| Builder
