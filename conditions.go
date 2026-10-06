@@ -9,8 +9,7 @@ type ConditionBuilderInterface interface {
 }
 
 type ConditionBuilder struct {
-	builder *Builder
-	parts   []conditionPart
+	parts []conditionPart
 }
 
 func NewConditionBuilder() *ConditionStart {
@@ -23,8 +22,6 @@ func (cb *ConditionBuilder) addPart(part conditionPart) {
 }
 
 func (cb *ConditionBuilder) buildCondition(builder *Builder) string {
-	cb.builder = builder
-
 	var b strings.Builder
 
 	for i, part := range cb.parts {
@@ -32,7 +29,7 @@ func (cb *ConditionBuilder) buildCondition(builder *Builder) string {
 			b.WriteByte(' ')
 		}
 
-		b.WriteString(part.build(cb))
+		b.WriteString(part.build(builder))
 	}
 
 	return b.String()

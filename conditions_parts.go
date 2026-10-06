@@ -1,36 +1,36 @@
 package neoqueries
 
 type conditionPart interface {
-	build(*ConditionBuilder) string
+	build(*Builder) string
 }
 
 type refConditionPart struct {
 	ref *UnbuiltRef
 }
 
-func (p *refConditionPart) build(cb *ConditionBuilder) string {
-	return p.ref.buildRef(cb.builder).String()
+func (p *refConditionPart) build(builder *Builder) string {
+	return p.ref.buildRef(builder).String()
 }
 
 type propConditionPart struct {
 	prop *UnbuiltProp
 }
 
-func (p *propConditionPart) build(cb *ConditionBuilder) string {
-	return p.prop.buildRef(cb.builder).String()
+func (p *propConditionPart) build(builder *Builder) string {
+	return p.prop.buildRef(builder).String()
 }
 
 type nestedConditionPart struct {
 	condition *ConditionBuilder
 }
 
-func (p *nestedConditionPart) build(cb *ConditionBuilder) string {
-	return "(" + p.condition.buildCondition(cb.builder) + ")"
+func (p *nestedConditionPart) build(builder *Builder) string {
+	return "(" + p.condition.buildCondition(builder) + ")"
 }
 
 type rawPart string
 
-func (p rawPart) build(*ConditionBuilder) string {
+func (p rawPart) build(*Builder) string {
 	return string(p)
 }
 
@@ -38,14 +38,14 @@ type anyPart struct {
 	value any
 }
 
-func (p *anyPart) build(cb *ConditionBuilder) string {
-	return "$" + cb.builder.nextValueRef(p.value).String()
+func (p *anyPart) build(builder *Builder) string {
+	return "$" + builder.nextValueRef(p.value).String()
 }
 
 type listPart[V any] struct {
 	list *List[V]
 }
 
-func (p listPart[V]) build(cb *ConditionBuilder) string {
-	return "$" + cb.builder.nextListRef(p.list).String()
+func (p listPart[V]) build(builder *Builder) string {
+	return "$" + builder.nextListRef(p.list).String()
 }
