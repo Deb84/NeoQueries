@@ -8,10 +8,6 @@ func NewRelation() *Relation {
 	return &Relation{}
 }
 
-func (r *Relation) getRef() Ref {
-	return r.ref
-}
-
 func (r *Relation) GetRef() *UnbuiltRef {
 	return newUnbuiltRef(r)
 }

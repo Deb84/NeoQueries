@@ -57,7 +57,6 @@ func returnBuild[U PropOrRef, T UnbuiltPropOrVar[U]](builder *Builder, ref T) st
 	return ref.buildRef(builder).String()
 }
 
-func returnElementBuild[T ElementInterface](_ *Builder, element T) string {
-	ref := element.getRef() // TODO: error handling
-	return ref.String()
+func returnElementBuild[T ElementInterface](b *Builder, element T) string {
+	return element.buildElement(b).String()
 }

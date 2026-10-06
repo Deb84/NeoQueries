@@ -1,7 +1,6 @@
 package neoqueries
 
 import (
-	"errors"
 	"fmt"
 )
 
@@ -34,15 +33,6 @@ func newUnbuiltRef(owner ElementInterface) *UnbuiltRef {
 	return &UnbuiltRef{
 		owner: owner,
 	}
-}
-
-func (r *UnbuiltRef) string() (string, error) {
-	v := r.owner.getRef()
-	if v != "" {
-		return v.String(), nil
-	}
-
-	return "", errors.New("variable not built")
 }
 
 func (r *UnbuiltRef) buildRef(builder *Builder) Ref {
