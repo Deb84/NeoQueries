@@ -17,6 +17,6 @@ func (n *Node) GetRef() *UnbuiltRef {
 }
 
 func (n *Node) buildElement(builder *Builder) Ref {
-	n.ref = builder.nextNodeRef(n)
+	n.ref = builder.ensureNodeRef(n)
 	return n.ref
 }

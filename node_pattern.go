@@ -44,7 +44,7 @@ func (p *NodePattern) buildLabels(builder *Builder) string {
 	template := ":$($%s)"
 
 	for _, label := range p.labels {
-		ref := builder.nextTokenRef(label)
+		ref := builder.ensureTokenRef(label)
 		p.tokenRef[label] = ref
 
 		b.WriteString(fmt.Sprintf(template, ref))
@@ -65,7 +65,7 @@ func (p *NodePattern) build(builder *Builder) PatternString {
 	b.WriteString(p.buildLabels(builder))
 
 	if len(*p.props) > 0 {
-		p.propsRef = builder.nextPropsRef(p.props)
+		p.propsRef = builder.ensurePropsRef(p.props)
 		b.WriteString(" $" + p.propsRef.String())
 	}
 

@@ -39,7 +39,7 @@ type anyPart struct {
 }
 
 func (p *anyPart) build(builder *Builder) string {
-	return "$" + builder.nextValueRef(p.value).String()
+	return "$" + builder.ensureValueRef(p.value).String()
 }
 
 type listPart[V any] struct {
@@ -47,5 +47,5 @@ type listPart[V any] struct {
 }
 
 func (p listPart[V]) build(builder *Builder) string {
-	return "$" + builder.nextListRef(p.list).String()
+	return "$" + builder.ensureListRef(p.list).String()
 }

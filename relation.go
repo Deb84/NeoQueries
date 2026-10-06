@@ -17,6 +17,6 @@ func (r *Relation) GetRef() *UnbuiltRef {
 }
 
 func (r *Relation) buildElement(builder *Builder) Ref {
-	r.ref = builder.nextRelationRef(r)
+	r.ref = builder.ensureRelationRef(r)
 	return r.ref
 }

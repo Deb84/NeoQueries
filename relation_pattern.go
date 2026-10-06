@@ -46,13 +46,13 @@ func (p *RelationPattern) build(builder *Builder) PatternString {
 	b.WriteString(relationRef.String())
 
 	if p.token != "" {
-		tokenRef := builder.nextTokenRef(p.token)
+		tokenRef := builder.ensureTokenRef(p.token)
 		p.tokenRef[p.token] = tokenRef
 		b.WriteString(fmt.Sprintf(tokenTemplate, tokenRef))
 	}
 
 	if len(*p.props) > 0 {
-		p.propsRef = builder.nextPropsRef(p.props)
+		p.propsRef = builder.ensurePropsRef(p.props)
 		b.WriteString(" $" + p.propsRef.String())
 	}
 

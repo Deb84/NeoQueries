@@ -69,7 +69,7 @@ func (p *UnbuiltProp) buildRef(builder *Builder) Prop {
 	vari := p.variable.buildRef(builder)
 
 	template := "%s[$%s]"
-	fieldRef := builder.nextTokenRef(p.prop)
+	fieldRef := builder.ensureTokenRef(p.prop)
 
 	prop := fmt.Sprintf(template, vari, fieldRef)
 
