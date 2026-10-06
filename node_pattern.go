@@ -52,21 +52,20 @@ func (p *NodePattern) buildLabels(builder *Builder) string {
 	return b.String()
 }
 
-func (p *NodePattern) build(pattern *Pattern) PatternString {
+func (p *NodePattern) build(builder *Builder) PatternString {
 	if p.empty {
 		return "()"
 	}
 	var b strings.Builder
 
-	p.node.setBuilder(pattern.builder)
-	nodeRef := p.node.buildElement()
+	nodeRef := p.node.buildElement(builder)
 
 	b.WriteByte('(')
 	b.WriteString(nodeRef.String())
-	b.WriteString(p.buildLabels(pattern.builder))
+	b.WriteString(p.buildLabels(builder))
 
 	if len(*p.props) > 0 {
-		p.propsRef = pattern.builder.nextPropsRef(p.props)
+		p.propsRef = builder.nextPropsRef(p.props)
 		b.WriteString(" $" + p.propsRef.String())
 	}
 

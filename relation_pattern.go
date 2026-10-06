@@ -34,11 +34,10 @@ func (p *RelationPattern) Props(props *Props) *RelationPattern {
 	return p
 }
 
-func (p *RelationPattern) build(pattern *Pattern) PatternString {
+func (p *RelationPattern) build(builder *Builder) PatternString {
 	tokenTemplate := ":$($%s)"
 
-	p.relation.setBuilder(pattern.builder)
-	relationRef := p.relation.buildElement()
+	relationRef := p.relation.buildElement(builder)
 
 	var b strings.Builder
 
@@ -47,13 +46,13 @@ func (p *RelationPattern) build(pattern *Pattern) PatternString {
 	b.WriteString(relationRef.String())
 
 	if p.token != "" {
-		tokenRef := pattern.builder.nextTokenRef(p.token)
+		tokenRef := builder.nextTokenRef(p.token)
 		p.tokenRef[p.token] = tokenRef
 		b.WriteString(fmt.Sprintf(tokenTemplate, tokenRef))
 	}
 
 	if len(*p.props) > 0 {
-		p.propsRef = pattern.builder.nextPropsRef(p.props)
+		p.propsRef = builder.nextPropsRef(p.props)
 		b.WriteString(" $" + p.propsRef.String())
 	}
 

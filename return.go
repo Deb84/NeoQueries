@@ -4,41 +4,39 @@ import (
 	"strings"
 )
 
-type ReturnBuilderBuild[T any] func(*ReturnBuilder[T], T) string
+type ReturnBuilderBuild[T any] func(*Builder, T) string
 
 type ReturnBuilder[T any] struct {
-	*Builder
 	objs      []T
 	buildFunc ReturnBuilderBuild[T]
 }
 
-func newBaseReturnBuilder[T any](builder *Builder, fun ReturnBuilderBuild[T], obj T, objs []T) *ReturnBuilder[T] {
+func newBaseReturnBuilder[T any](fun ReturnBuilderBuild[T], obj T, objs []T) *ReturnBuilder[T] {
 	objs = append([]T{obj}, objs...)
 
 	return &ReturnBuilder[T]{
-		Builder:   builder,
 		objs:      objs,
 		buildFunc: fun,
 	}
 }
 
-func newReturnBuilder[U PropOrRef, T UnbuiltPropOrVar[U]](builder *Builder, ref T, refs []T) *ReturnBuilder[T] {
-	return newBaseReturnBuilder(builder, returnBuild[U, T], ref, refs)
+func newReturnBuilder[U PropOrRef, T UnbuiltPropOrVar[U]](ref T, refs []T) *ReturnBuilder[T] {
+	return newBaseReturnBuilder(returnBuild[U, T], ref, refs)
 }
 
-func newReturnElementBuilder[T ElementInterface](builder *Builder, ref T, refs []T) *ReturnBuilder[T] {
-	return newBaseReturnBuilder(builder, returnElementBuild[T], ref, refs)
+func newReturnElementBuilder[T ElementInterface](ref T, refs []T) *ReturnBuilder[T] {
+	return newBaseReturnBuilder(returnElementBuild[T], ref, refs)
 }
 
 func NewReturnBuilder[U PropOrRef, T UnbuiltPropOrVar[U]](ref T, refs ...T) *ReturnBuilder[T] {
-	return newReturnBuilder(nil, ref, refs)
+	return newReturnBuilder(ref, refs)
 }
 
 func NewReturnElementBuilder[T ElementInterface](element T, elements ...T) *ReturnBuilder[T] {
-	return newReturnElementBuilder(nil, element, elements)
+	return newReturnElementBuilder(element, elements)
 }
 
-func (b *ReturnBuilder[T]) build() string {
+func (b *ReturnBuilder[T]) build(builder *Builder) string {
 	query := `RETURN`
 	var s strings.Builder
 
@@ -49,21 +47,17 @@ func (b *ReturnBuilder[T]) build() string {
 		if i > 0 {
 			s.WriteByte(',')
 		}
-		s.WriteString(b.buildFunc(b, obj))
+		s.WriteString(b.buildFunc(builder, obj))
 	}
 
 	return s.String()
 }
 
-func (b *ReturnBuilder[T]) setBuilder(builder *Builder) {
-	b.Builder = builder
+func returnBuild[U PropOrRef, T UnbuiltPropOrVar[U]](builder *Builder, ref T) string {
+	return ref.buildRef(builder).String()
 }
 
-func returnBuild[U PropOrRef, T UnbuiltPropOrVar[U]](b *ReturnBuilder[T], ref T) string {
-	return ref.buildRef(b.Builder).String()
-}
-
-func returnElementBuild[T ElementInterface](_ *ReturnBuilder[T], element T) string {
+func returnElementBuild[T ElementInterface](_ *Builder, element T) string {
 	ref := element.getRef() // TODO: error handling
 	return ref.String()
 }

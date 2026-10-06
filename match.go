@@ -5,28 +5,22 @@ import (
 )
 
 type MatchBuilder struct {
-	*Builder
 	patterns []PatternInterface
 }
 
-func newMatchBuilder(builder *Builder, pattern PatternInterface, patterns []PatternInterface) *MatchBuilder {
+func newMatchBuilder(pattern PatternInterface, patterns []PatternInterface) *MatchBuilder {
 	patterns = append([]PatternInterface{pattern}, patterns...)
 
-	for _, e := range patterns {
-		e.setBuilder(builder)
-	}
-
 	return &MatchBuilder{
-		Builder:  builder,
 		patterns: patterns,
 	}
 }
 
 func NewMatchBuilder(pattern PatternInterface, patterns ...PatternInterface) *MatchBuilder {
-	return newMatchBuilder(nil, pattern, patterns)
+	return newMatchBuilder(pattern, patterns)
 }
 
-func (mb *MatchBuilder) build() string {
+func (mb *MatchBuilder) build(builder *Builder) string {
 	query := `MATCH`
 
 	var b strings.Builder
@@ -38,12 +32,8 @@ func (mb *MatchBuilder) build() string {
 		if i > 0 {
 			b.WriteString(", ")
 		}
-		b.WriteString(pattern.build().string())
+		b.WriteString(pattern.build(builder).string())
 	}
 
 	return b.String()
-}
-
-func (mb *MatchBuilder) setBuilder(builder *Builder) {
-	mb.Builder = builder
 }

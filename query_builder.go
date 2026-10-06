@@ -20,37 +20,37 @@ func (qb *QueryBuilder) addPart(part Buildable) {
 }
 
 func (qb *QueryBuilder) Create(pattern PatternInterface, patterns ...PatternInterface) *QueryBuilder {
-	qb.addPart(newCreateBuilder(qb.Builder, pattern, patterns))
+	qb.addPart(newCreateBuilder(pattern, patterns))
 	return qb
 }
 
 func (qb *QueryBuilder) Delete(element ElementInterface, elements ...ElementInterface) *QueryBuilder {
-	qb.addPart(newDeleteBuilder(qb.Builder, element, elements))
+	qb.addPart(newDeleteBuilder(element, elements))
 	return qb
 }
 
 func (qb *QueryBuilder) DetachDelete(element ElementInterface, elements ...ElementInterface) *QueryBuilder {
-	qb.addPart(newDetachDeleteBuilder(qb.Builder, element, elements))
+	qb.addPart(newDetachDeleteBuilder(element, elements))
 	return qb
 }
 
 func (qb *QueryBuilder) Match(pattern PatternInterface, patterns ...PatternInterface) *QueryBuilder {
-	qb.addPart(newMatchBuilder(qb.Builder, pattern, patterns))
+	qb.addPart(newMatchBuilder(pattern, patterns))
 	return qb
 }
 
 func (qb *QueryBuilder) Return[U PropOrRef, T UnbuiltPropOrVar[U]](ref T, refs ...T) *QueryBuilder {
-	qb.addPart(newReturnBuilder(qb.Builder, ref, refs))
+	qb.addPart(newReturnBuilder(ref, refs))
 	return qb
 }
 
 func (qb *QueryBuilder) ReturnElement(element ElementInterface, elements ...ElementInterface) *QueryBuilder {
-	qb.addPart(newReturnElementBuilder(qb.Builder, element, elements))
+	qb.addPart(newReturnElementBuilder(element, elements))
 	return qb
 }
 
 func (qb *QueryBuilder) Where(condition ConditionBuilderInterface) *QueryBuilder {
-	qb.addPart(newWhereBuilder(qb.Builder, condition))
+	qb.addPart(newWhereBuilder(condition))
 	return qb
 }
 
@@ -58,7 +58,7 @@ func (qb *QueryBuilder) Build() (string, Params) {
 	var b strings.Builder
 
 	for _, part := range qb.parts {
-		query := part.build()
+		query := part.build(qb.Builder)
 		b.WriteString(query)
 		b.WriteByte('\n')
 	}

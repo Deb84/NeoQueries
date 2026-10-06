@@ -5,28 +5,22 @@ import (
 )
 
 type CreateBuilder struct {
-	*Builder
 	patterns []PatternInterface
 }
 
-func newCreateBuilder(builder *Builder, pattern PatternInterface, patterns []PatternInterface) *CreateBuilder {
+func newCreateBuilder(pattern PatternInterface, patterns []PatternInterface) *CreateBuilder {
 	patterns = append([]PatternInterface{pattern}, patterns...)
 
-	for _, e := range patterns {
-		e.setBuilder(builder)
-	}
-
 	return &CreateBuilder{
-		Builder:  builder,
 		patterns: patterns,
 	}
 }
 
 func NewCreateBuilder(element PatternInterface, elements ...PatternInterface) *CreateBuilder {
-	return newCreateBuilder(NewBuilder(), element, elements)
+	return newCreateBuilder(element, elements)
 }
 
-func (cb *CreateBuilder) build() string {
+func (cb *CreateBuilder) build(builder *Builder) string {
 	query := `CREATE`
 
 	var b strings.Builder
@@ -38,7 +32,7 @@ func (cb *CreateBuilder) build() string {
 		if i > 0 {
 			b.WriteString(", ")
 		}
-		b.WriteString(pattern.build().string())
+		b.WriteString(pattern.build(builder).string())
 	}
 
 	return b.String()

@@ -9,31 +9,24 @@ type WhereBuilder struct {
 	condition ConditionBuilderInterface
 }
 
-func newWhereBuilder(builder *Builder, condition ConditionBuilderInterface) *WhereBuilder {
-	condition.setBuilder(builder)
-
+func newWhereBuilder(condition ConditionBuilderInterface) *WhereBuilder {
 	return &WhereBuilder{
-		Builder:   builder,
 		condition: condition,
 	}
 }
 
 func NewWhereBuilder(condition ConditionBuilderInterface) *WhereBuilder {
-	return newWhereBuilder(nil, condition)
+	return newWhereBuilder(condition)
 }
 
-func (wb *WhereBuilder) build() string {
+func (wb *WhereBuilder) build(builder *Builder) string {
 	query := `WHERE`
 
 	var b strings.Builder
 
 	b.WriteString(query)
 	b.WriteByte(' ')
-	b.WriteString(wb.condition.buildCondition())
+	b.WriteString(wb.condition.buildCondition(builder))
 
 	return b.String()
-}
-
-func (wb *WhereBuilder) setBuilder(builder *Builder) {
-	wb.Builder = builder
 }

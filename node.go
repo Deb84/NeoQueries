@@ -1,14 +1,11 @@
 package neoqueries
 
 type Node struct {
-	*Element
 	ref Ref
 }
 
 func NewNode() *Node {
-	return &Node{
-		Element: newElement(),
-	}
+	return &Node{}
 }
 
 func (n *Node) getRef() Ref {
@@ -19,7 +16,7 @@ func (n *Node) GetRef() *UnbuiltRef {
 	return newUnbuiltRef(n)
 }
 
-func (n *Node) buildElement() Ref {
-	n.ref = n.builder.nextNodeRef(n)
+func (n *Node) buildElement(builder *Builder) Ref {
+	n.ref = builder.nextNodeRef(n)
 	return n.ref
 }

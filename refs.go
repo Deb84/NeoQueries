@@ -46,8 +46,7 @@ func (r *UnbuiltRef) string() (string, error) {
 }
 
 func (r *UnbuiltRef) buildRef(builder *Builder) Ref {
-	r.owner.setBuilder(builder)
-	return r.owner.buildElement()
+	return r.owner.buildElement(builder)
 }
 
 func (r *UnbuiltRef) Prop(prop string) *UnbuiltProp {

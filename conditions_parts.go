@@ -25,8 +25,7 @@ type nestedConditionPart struct {
 }
 
 func (p *nestedConditionPart) build(cb *ConditionBuilder) string {
-	p.condition.setBuilder(cb.builder)
-	return "(" + p.condition.buildCondition() + ")"
+	return "(" + p.condition.buildCondition(cb.builder) + ")"
 }
 
 type rawPart string

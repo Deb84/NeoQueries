@@ -9,8 +9,7 @@ type Props map[Ref]string
 type List[V any] []V
 
 type Buildable interface {
-	build() string
-	GetParams() Params
+	build(builder *Builder) string
 }
 
 type Builder struct {
