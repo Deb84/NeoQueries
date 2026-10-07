@@ -34,6 +34,14 @@ func (p rawPart) build(*Builder) string {
 	return string(p)
 }
 
+type listPart[V any] struct {
+	list *List[V]
+}
+
+func (p listPart[V]) build(builder *Builder) string {
+	return "$" + builder.ensureListRef(p.list).String()
+}
+
 type anyPart struct {
 	value any
 }
@@ -42,10 +50,10 @@ func (p *anyPart) build(builder *Builder) string {
 	return "$" + builder.ensureValueRef(p.value).String()
 }
 
-type listPart[V any] struct {
-	list *List[V]
+type ptrPart[T any] struct {
+	value *T
 }
 
-func (p listPart[V]) build(builder *Builder) string {
-	return "$" + builder.ensureListRef(p.list).String()
+func (p *ptrPart[T]) build(builder *Builder) string {
+	return "$" + builder.ensureValuePtrRef(p.value).String()
 }

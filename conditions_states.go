@@ -14,6 +14,11 @@ func (c *ConditionStart) Value[T any](value T) *AnyState[T] {
 	return &AnyState[T]{builder: c.builder}
 }
 
+func (c *ConditionStart) ValuePtr[T any](value *T) *AnyState[T] {
+	c.builder.addPart(&ptrPart[T]{value: value})
+	return &AnyState[T]{builder: c.builder}
+}
+
 func (c *ConditionStart) Prop(value *UnbuiltProp) *StartRef {
 	c.builder.addPart(&propConditionPart{prop: value})
 	return newStartRef(c.builder)
@@ -29,9 +34,9 @@ func (c *ConditionStart) Condition(value *ConditionBuilder) *CompleteCondition {
 	return &CompleteCondition{c.builder}
 }
 
-func (p *ConditionStart) Not() *ConditionStart {
-	p.builder.addPart(rawPart("NOT"))
-	return &ConditionStart{builder: p.builder}
+func (c *ConditionStart) Not() *ConditionStart {
+	c.builder.addPart(rawPart("NOT"))
+	return &ConditionStart{builder: c.builder}
 }
 
 type StartRef struct {
@@ -155,6 +160,12 @@ func (p *Comparison[T]) Prop(value *UnbuiltProp) *CompleteCondition {
 
 func (p *Comparison[T]) Value(value T) *CompleteCondition {
 	p.builder.addPart(&anyPart{value: value})
+	return &CompleteCondition{p.builder}
+}
+
+// ValuePtr doesn't use the Comparison generic because if the generic is any that not working
+func (p *Comparison[T]) ValuePtr[V any](value *V) *CompleteCondition {
+	p.builder.addPart(&ptrPart[V]{value: value})
 	return &CompleteCondition{p.builder}
 }
 

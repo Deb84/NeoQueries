@@ -21,6 +21,7 @@ type Builder struct {
 	propsRefs    builtRefs[*Props]
 	listRefs     builtRefs[any]
 	valueRefs    builtRefs[any]
+	ptrRefs      builtRefs[any]
 
 	params Params
 
@@ -41,6 +42,7 @@ func NewBuilder() *Builder {
 		propsRefs:    make(builtRefs[*Props]),
 		listRefs:     make(builtRefs[any]),
 		valueRefs:    make(builtRefs[any]),
+		ptrRefs:      make(builtRefs[any]),
 	}
 }
 
@@ -84,6 +86,23 @@ func (b *Builder) ensurePropsRef(value *Props) Ref {
 func (b *Builder) ensureValueRef(value any) Ref {
 	ref := b.next(value, ValueRef, &b.valueID, b.valueRefs)
 	b.addToParams(value, ref)
+	return ref
+}
+
+func (b *Builder) ensureValuePtrRef[T any](value *T) Ref {
+	if savedRef, ok := b.listRefs[value]; ok {
+		return savedRef
+	}
+
+	ref := Ref(fmt.Sprintf("%s%d", ValueRef, b.valueID))
+	b.ptrRefs[value] = ref
+
+	if value == nil {
+		b.addToParams(nil, ref)
+	} else {
+		b.addToParams(*value, ref)
+	}
+
 	return ref
 }
 
