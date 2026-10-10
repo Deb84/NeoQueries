@@ -90,7 +90,7 @@ func (b *Builder) ensureValueRef(value any) Ref {
 }
 
 func (b *Builder) ensureValuePtrRef[T any](value *T) Ref {
-	if savedRef, ok := b.listRefs[value]; ok {
+	if savedRef, ok := b.ptrRefs[value]; ok {
 		return savedRef
 	}
 
