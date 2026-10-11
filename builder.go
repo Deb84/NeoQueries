@@ -95,6 +95,8 @@ func (b *Builder) ensureValuePtrRef[T any](value *T) Ref {
 	}
 
 	ref := Ref(fmt.Sprintf("%s%d", ValueRef, b.valueID))
+	b.valueID++
+
 	b.ptrRefs[value] = ref
 
 	if value == nil {
