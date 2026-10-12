@@ -1,6 +1,6 @@
 package neoqueries
 
-type ElementInterface interface {
+type Element interface {
 	buildElement(*Builder) Ref
 	GetRef() *UnbuiltRef
 }

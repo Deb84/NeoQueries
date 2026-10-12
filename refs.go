@@ -26,10 +26,10 @@ func (p Prop) String() string {
 }
 
 type UnbuiltRef struct {
-	owner ElementInterface
+	owner Element
 }
 
-func newUnbuiltRef(owner ElementInterface) *UnbuiltRef {
+func newUnbuiltRef(owner Element) *UnbuiltRef {
 	return &UnbuiltRef{
 		owner: owner,
 	}

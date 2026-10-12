@@ -3,12 +3,12 @@ package neoqueries
 import "strings"
 
 type DeleteBuilder struct {
-	elements []ElementInterface
+	elements []Element
 	query    string
 }
 
-func newBaseDeleteBuilder(query string, element ElementInterface, elements []ElementInterface) *DeleteBuilder {
-	elements = append([]ElementInterface{element}, elements...)
+func newBaseDeleteBuilder(query string, element Element, elements []Element) *DeleteBuilder {
+	elements = append([]Element{element}, elements...)
 
 	return &DeleteBuilder{
 		elements: elements,
@@ -16,19 +16,19 @@ func newBaseDeleteBuilder(query string, element ElementInterface, elements []Ele
 	}
 }
 
-func newDeleteBuilder(element ElementInterface, elements []ElementInterface) *DeleteBuilder {
+func newDeleteBuilder(element Element, elements []Element) *DeleteBuilder {
 	return newBaseDeleteBuilder("DELETE", element, elements)
 }
 
-func newDetachDeleteBuilder(element ElementInterface, elements []ElementInterface) *DeleteBuilder {
+func newDetachDeleteBuilder(element Element, elements []Element) *DeleteBuilder {
 	return newBaseDeleteBuilder("DETACH DELETE", element, elements)
 }
 
-func NewDeleteBuilder(element ElementInterface, elements ...ElementInterface) *DeleteBuilder {
+func NewDeleteBuilder(element Element, elements ...Element) *DeleteBuilder {
 	return newBaseDeleteBuilder("DELETE", element, elements)
 }
 
-func NewDetachDeleteBuilder(element ElementInterface, elements ...ElementInterface) *DeleteBuilder {
+func NewDetachDeleteBuilder(element Element, elements ...Element) *DeleteBuilder {
 	return newBaseDeleteBuilder("DETACH DELETE", element, elements)
 }
 

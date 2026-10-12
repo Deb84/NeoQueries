@@ -24,7 +24,7 @@ func (c *ConditionStart) Prop(value *UnbuiltProp) *StartRef {
 	return newStartRef(c.builder)
 }
 
-func (c *ConditionStart) Element(value ElementInterface) *StartRef {
+func (c *ConditionStart) Element(value Element) *StartRef {
 	c.builder.addPart(&refConditionPart{ref: value.GetRef()})
 	return newStartRef(c.builder)
 }
