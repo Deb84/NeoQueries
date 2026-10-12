@@ -50,15 +50,50 @@ func (b *Builder) GetParams() Params {
 	return b.params
 }
 
-func (b *Builder) next[T comparable](obj T, ref Ref, id *int, refMap builtRefs[T]) Ref {
-	if savedRef, ok := refMap[obj]; ok {
+func storeRefBase(ref Ref, id *int) Ref {
+	*id++
+	return Ref(fmt.Sprintf("%s%d", ref, *id))
+}
+
+func storeRef[V comparable](value V, ref Ref, id *int, refMap builtRefs[V]) Ref {
+	if savedRef, ok := refMap[value]; ok {
 		return savedRef
 	}
 
-	ref = Ref(fmt.Sprintf("%s%d", ref, *id))
-	*id++
+	ref = storeRefBase(ref, id)
 
-	refMap[obj] = ref
+	refMap[value] = ref
+	return ref
+}
+
+func storeAnyRef[V comparable](value V, ref Ref, id *int, refMap builtRefs[any]) Ref {
+	if savedRef, ok := refMap[value]; ok {
+		return savedRef
+	}
+
+	ref = storeRefBase(ref, id)
+
+	refMap[value] = ref
+	return ref
+}
+
+func (b *Builder) next[T comparable](obj T, ref Ref, id *int, refMap builtRefs[T]) Ref {
+	return storeRef(obj, ref, id, refMap)
+}
+
+func (b *Builder) nextWithPtr[T comparable](obj T, ref Ref, id *int, refMap builtRefs[any]) Ref {
+	return storeAnyRef(obj, ref, id, refMap)
+}
+
+func (b *Builder) nextWithParams[T comparable](obj T, params any, ref Ref, id *int, refMap builtRefs[T]) Ref {
+	ref = storeRef(obj, ref, id, refMap)
+	b.addToParams(params, ref)
+	return ref
+}
+
+func (b *Builder) nextWithParamsPtr[T comparable](obj T, params any, ref Ref, id *int, refMap builtRefs[any]) Ref {
+	ref = storeAnyRef(obj, ref, id, refMap)
+	b.addToParams(params, ref)
 	return ref
 }
 
@@ -73,31 +108,19 @@ func (b *Builder) ensureRelationRef(element *Relation) Ref {
 	return b.next(element, RelationRef, &b.relationID, b.relationRefs)
 }
 func (b *Builder) ensureTokenRef(value string) Ref {
-	ref := b.next(value, TokenRef, &b.tokenID, b.tokenRefs)
-	b.addToParams(value, ref)
-	return ref
+	return b.nextWithParams(value, value, TokenRef, &b.tokenID, b.tokenRefs)
 }
 func (b *Builder) ensurePropsRef(value *Props) Ref {
-	ref := b.next(value, PropsRef, &b.propsID, b.propsRefs)
-	b.addToParams(*value, ref)
-	return ref
+	return b.nextWithParams(value, *value, PropsRef, &b.propsID, b.propsRefs)
 }
 
 func (b *Builder) ensureValueRef(value any) Ref {
-	ref := b.next(value, ValueRef, &b.valueID, b.valueRefs)
-	b.addToParams(value, ref)
+	ref := b.nextWithParams(value, value, ValueRef, &b.valueID, b.valueRefs)
 	return ref
 }
 
 func (b *Builder) ensureValuePtrRef[T any](value *T) Ref {
-	if savedRef, ok := b.ptrRefs[value]; ok {
-		return savedRef
-	}
-
-	ref := Ref(fmt.Sprintf("%s%d", ValueRef, b.valueID))
-	b.valueID++
-
-	b.ptrRefs[value] = ref
+	ref := b.nextWithPtr(value, ValueRef, &b.valueID, b.ptrRefs)
 
 	if value == nil {
 		b.addToParams(nil, ref)
@@ -110,15 +133,5 @@ func (b *Builder) ensureValuePtrRef[T any](value *T) Ref {
 
 // ensureListRef doesn't use b.next() because *List[V] doesn't match with b.next() generic
 func (b *Builder) ensureListRef[V any](value *List[V]) Ref {
-	if savedRef, ok := b.listRefs[value]; ok {
-		return savedRef
-	}
-
-	ref := Ref(fmt.Sprintf("%s%d", ListRef, b.listID))
-	b.listID++
-
-	b.listRefs[value] = ref
-	b.addToParams(*value, ref)
-
-	return ref
+	return b.nextWithParamsPtr(value, *value, ValueRef, &b.listID, b.listRefs)
 }
