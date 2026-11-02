@@ -5,7 +5,7 @@ import (
 )
 
 type Params map[string]any
-type Props map[Ref]string
+type Props map[string]string
 type List[V any] []V
 
 type Buildable interface {
