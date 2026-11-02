@@ -43,8 +43,8 @@ flowchart TD
     ElementInterface --> Node
     ElementInterface --> Relation
 
-    Node --> |"ensureNodeRef()"| Builder
-    Relation --> |"ensureRelationRef()"| Builder
+    Node --> |"ensureNodeRef()"| BuildContext
+    Relation --> |"ensureRelationRef()"| BuildContext
 
     ConditionBuilder --> |"build()"| conditionPart("conditionPart")
 
@@ -57,12 +57,12 @@ flowchart TD
 
     propConditionPart --> |"buildRef()"| UnbuiltProp
     nestedConditionPart --> |"buildCondition()"| ConditionBuilder
-    listPart --> |"ensureListRef()"| Builder
-    anyPart --> |"ensureValueRef()"| Builder
+    listPart --> |"ensureListRef()"| BuildContext
+    anyPart --> |"ensureValueRef()"| BuildContext
     refConditionPart --> |"buildRef()"| UnbuiltRef
 
     UnbuiltPropOrVar --> UnbuiltProp
     UnbuiltPropOrVar --> UnbuiltRef
 
     UnbuiltRef --> |"buildElement()"| ElementInterface
-    UnbuiltProp --> |"ensureTokenRef()"| Builder
+    UnbuiltProp --> |"ensureTokenRef()"| BuildContext
