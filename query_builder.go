@@ -5,13 +5,19 @@ import (
 )
 
 type QueryBuilder struct {
-	*Builder
+	*BuildContext
 	parts []Buildable
 }
 
 func NewQueryBuilder() *QueryBuilder {
 	return &QueryBuilder{
-		Builder: NewBuilder(),
+		BuildContext: NewBuildContext(defaultConfig),
+	}
+}
+
+func newQueryBuilderWithConfig(config Config) *QueryBuilder {
+	return &QueryBuilder{
+		BuildContext: NewBuildContext(config),
 	}
 }
 
@@ -58,7 +64,7 @@ func (qb *QueryBuilder) Build() (string, Params) {
 	var b strings.Builder
 
 	for _, part := range qb.parts {
-		query := part.build(qb.Builder)
+		query := part.build(qb.BuildContext)
 		b.WriteString(query)
 		b.WriteByte('\n')
 	}

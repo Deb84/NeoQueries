@@ -18,14 +18,14 @@ func NewWhereBuilder(condition ConditionBuilderInterface) *WhereBuilder {
 	return newWhereBuilder(condition)
 }
 
-func (wb *WhereBuilder) build(builder *Builder) string {
+func (wb *WhereBuilder) build(context *BuildContext) string {
 	query := `WHERE`
 
 	var b strings.Builder
 
 	b.WriteString(query)
 	b.WriteByte(' ')
-	b.WriteString(wb.condition.buildCondition(builder))
+	b.WriteString(wb.condition.buildCondition(context))
 
 	return b.String()
 }

@@ -32,7 +32,7 @@ func NewDetachDeleteBuilder(element Element, elements ...Element) *DeleteBuilder
 	return newBaseDeleteBuilder("DETACH DELETE", element, elements)
 }
 
-func (b *DeleteBuilder) build(builder *Builder) string {
+func (b *DeleteBuilder) build(context *BuildContext) string {
 	var s strings.Builder
 
 	s.WriteString(b.query)
@@ -42,7 +42,7 @@ func (b *DeleteBuilder) build(builder *Builder) string {
 		if i > 0 {
 			s.WriteString(", ")
 		}
-		s.WriteString(element.buildElement(builder).String())
+		s.WriteString(element.buildElement(context).String())
 	}
 
 	return s.String()

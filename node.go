@@ -12,7 +12,7 @@ func (n *Node) GetRef() *UnbuiltRef {
 	return newUnbuiltRef(n)
 }
 
-func (n *Node) buildElement(builder *Builder) Ref {
-	n.ref = builder.ensureNodeRef(n)
+func (n *Node) buildElement(context *BuildContext) Ref {
+	n.ref = context.ensureNodeRef(n)
 	return n.ref
 }

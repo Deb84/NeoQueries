@@ -20,7 +20,7 @@ func NewCreateBuilder(element PatternInterface, elements ...PatternInterface) *C
 	return newCreateBuilder(element, elements)
 }
 
-func (cb *CreateBuilder) build(builder *Builder) string {
+func (cb *CreateBuilder) build(context *BuildContext) string {
 	query := `CREATE`
 
 	var b strings.Builder
@@ -32,7 +32,7 @@ func (cb *CreateBuilder) build(builder *Builder) string {
 		if i > 0 {
 			b.WriteString(", ")
 		}
-		b.WriteString(pattern.build(builder).string())
+		b.WriteString(pattern.build(context).string())
 	}
 
 	return b.String()

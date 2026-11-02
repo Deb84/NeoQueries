@@ -20,7 +20,7 @@ func NewMatchBuilder(pattern PatternInterface, patterns ...PatternInterface) *Ma
 	return newMatchBuilder(pattern, patterns)
 }
 
-func (mb *MatchBuilder) build(builder *Builder) string {
+func (mb *MatchBuilder) build(context *BuildContext) string {
 	query := `MATCH`
 
 	var b strings.Builder
@@ -32,7 +32,7 @@ func (mb *MatchBuilder) build(builder *Builder) string {
 		if i > 0 {
 			b.WriteString(", ")
 		}
-		b.WriteString(pattern.build(builder).string())
+		b.WriteString(pattern.build(context).string())
 	}
 
 	return b.String()

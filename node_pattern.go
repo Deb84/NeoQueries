@@ -39,12 +39,12 @@ func (p *NodePattern) Props(props *Props) *NodePattern {
 	return p
 }
 
-func (p *NodePattern) buildLabels(builder *Builder) string {
+func (p *NodePattern) buildLabels(context *BuildContext) string {
 	var b strings.Builder
 	template := ":$($%s)"
 
 	for _, label := range p.labels {
-		ref := builder.ensureTokenRef(label)
+		ref := context.ensureTokenRef(label)
 		p.tokenRef[label] = ref
 
 		b.WriteString(fmt.Sprintf(template, ref))
@@ -52,20 +52,20 @@ func (p *NodePattern) buildLabels(builder *Builder) string {
 	return b.String()
 }
 
-func (p *NodePattern) build(builder *Builder) PatternString {
+func (p *NodePattern) build(context *BuildContext) PatternString {
 	if p.empty {
 		return "()"
 	}
 	var b strings.Builder
 
-	nodeRef := p.node.buildElement(builder)
+	nodeRef := p.node.buildElement(context)
 
 	b.WriteByte('(')
 	b.WriteString(nodeRef.String())
-	b.WriteString(p.buildLabels(builder))
+	b.WriteString(p.buildLabels(context))
 
 	if len(*p.props) > 0 {
-		propsRef := builder.ensurePropsRef(p.props)
+		propsRef := context.ensurePropsRef(p.props)
 		b.WriteString(" $" + propsRef.String())
 	}
 

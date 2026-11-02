@@ -1,6 +1,6 @@
 package neoqueries
 
 type Element interface {
-	buildElement(*Builder) Ref
+	buildElement(*BuildContext) Ref
 	GetRef() *UnbuiltRef
 }

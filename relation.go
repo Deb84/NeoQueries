@@ -12,7 +12,7 @@ func (r *Relation) GetRef() *UnbuiltRef {
 	return newUnbuiltRef(r)
 }
 
-func (r *Relation) buildElement(builder *Builder) Ref {
-	r.ref = builder.ensureRelationRef(r)
+func (r *Relation) buildElement(context *BuildContext) Ref {
+	r.ref = context.ensureRelationRef(r)
 	return r.ref
 }

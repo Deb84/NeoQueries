@@ -10,7 +10,7 @@ type PropOrRef interface {
 }
 
 type UnbuiltPropOrVar[T PropOrRef] interface {
-	buildRef(builder *Builder) T
+	buildRef(context *BuildContext) T
 }
 
 type Ref string
@@ -35,8 +35,8 @@ func newUnbuiltRef(owner Element) *UnbuiltRef {
 	}
 }
 
-func (r *UnbuiltRef) buildRef(builder *Builder) Ref {
-	return r.owner.buildElement(builder)
+func (r *UnbuiltRef) buildRef(context *BuildContext) Ref {
+	return r.owner.buildElement(context)
 }
 
 func (r *UnbuiltRef) Prop(prop string) *UnbuiltProp {
@@ -55,11 +55,11 @@ func newProp(variable *UnbuiltRef, prop string) *UnbuiltProp {
 	}
 }
 
-func (p *UnbuiltProp) buildRef(builder *Builder) Prop {
-	vari := p.variable.buildRef(builder)
+func (p *UnbuiltProp) buildRef(context *BuildContext) Prop {
+	vari := p.variable.buildRef(context)
 
 	template := "%s[$%s]"
-	fieldRef := builder.ensureTokenRef(p.prop)
+	fieldRef := context.ensureTokenRef(p.prop)
 
 	prop := fmt.Sprintf(template, vari, fieldRef)
 

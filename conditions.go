@@ -5,7 +5,7 @@ import (
 )
 
 type ConditionBuilderInterface interface {
-	buildCondition(builder *Builder) string
+	buildCondition(context *BuildContext) string
 }
 
 type ConditionBuilder struct {
@@ -21,7 +21,7 @@ func (cb *ConditionBuilder) addPart(part conditionPart) {
 	cb.parts = append(cb.parts, part)
 }
 
-func (cb *ConditionBuilder) buildCondition(builder *Builder) string {
+func (cb *ConditionBuilder) buildCondition(context *BuildContext) string {
 	var b strings.Builder
 
 	for i, part := range cb.parts {
@@ -29,7 +29,7 @@ func (cb *ConditionBuilder) buildCondition(builder *Builder) string {
 			b.WriteByte(' ')
 		}
 
-		b.WriteString(part.build(builder))
+		b.WriteString(part.build(context))
 	}
 
 	return b.String()

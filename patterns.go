@@ -9,11 +9,11 @@ func (p PatternString) string() string {
 }
 
 type PatternInterface interface {
-	build(builder *Builder) PatternString
+	build(context *BuildContext) PatternString
 }
 
 type patternPartInterface interface {
-	build(builder *Builder) PatternString
+	build(context *BuildContext) PatternString
 }
 
 type patternPart struct {
@@ -44,11 +44,11 @@ func (p *Pattern) addPart(part patternPartInterface) {
 	p.parts = append(p.parts, part)
 }
 
-func (p *Pattern) build(builder *Builder) PatternString {
+func (p *Pattern) build(context *BuildContext) PatternString {
 	var b strings.Builder
 
 	for _, part := range p.parts {
-		b.WriteString(part.build(builder).string())
+		b.WriteString(part.build(context).string())
 	}
 
 	return PatternString(b.String())

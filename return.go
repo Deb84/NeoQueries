@@ -4,7 +4,7 @@ import (
 	"strings"
 )
 
-type ReturnBuilderBuild[T any] func(*Builder, T) string
+type ReturnBuilderBuild[T any] func(*BuildContext, T) string
 
 type ReturnBuilder[T any] struct {
 	objs      []T
@@ -36,7 +36,7 @@ func NewReturnElementBuilder[T Element](element T, elements ...T) *ReturnBuilder
 	return newReturnElementBuilder(element, elements)
 }
 
-func (b *ReturnBuilder[T]) build(builder *Builder) string {
+func (b *ReturnBuilder[T]) build(context *BuildContext) string {
 	query := `RETURN`
 	var s strings.Builder
 
@@ -47,16 +47,16 @@ func (b *ReturnBuilder[T]) build(builder *Builder) string {
 		if i > 0 {
 			s.WriteByte(',')
 		}
-		s.WriteString(b.buildFunc(builder, obj))
+		s.WriteString(b.buildFunc(context, obj))
 	}
 
 	return s.String()
 }
 
-func returnBuild[U PropOrRef, T UnbuiltPropOrVar[U]](builder *Builder, ref T) string {
-	return ref.buildRef(builder).String()
+func returnBuild[U PropOrRef, T UnbuiltPropOrVar[U]](context *BuildContext, ref T) string {
+	return ref.buildRef(context).String()
 }
 
-func returnElementBuild[T Element](b *Builder, element T) string {
+func returnElementBuild[T Element](b *BuildContext, element T) string {
 	return element.buildElement(b).String()
 }
