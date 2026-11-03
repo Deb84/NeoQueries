@@ -1,18 +1,17 @@
 package neoqueries
 
 type Node struct {
-	ref Ref
+	ref NodeRef
 }
 
 func NewNode() *Node {
 	return &Node{}
 }
 
-func (n *Node) GetRef() *UnbuiltRef {
+func (n *Node) GetRef() *UnbuiltRef[NodeRef] {
 	return newUnbuiltRef(n)
 }
 
-func (n *Node) buildElement(context *BuildContext) Ref {
-	n.ref = context.ensureNodeRef(n)
-	return n.ref
+func (n *Node) buildElement(context *BuildContext) NodeRef {
+	return context.ensureNodeRef(n)
 }

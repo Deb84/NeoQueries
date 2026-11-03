@@ -1,12 +1,12 @@
 package neoqueries
 
-const (
-	NodeRef     Ref = "n"
-	RelationRef Ref = "r"
-	TokenRef    Ref = "t"
-	PropsRef    Ref = "p"
-	ListRef     Ref = "ls"
-	ValueRef    Ref = "v"
+var (
+	DefaultNodeRef     Ref = Ref{"n"}
+	DefaultRelationRef Ref = Ref{"r"}
+	DefaultTokenRef    Ref = Ref{"t"}
+	DefaultPropsRef    Ref = Ref{"p"}
+	DefaultListRef     Ref = Ref{"ls"}
+	DefaultValueRef    Ref = Ref{"v"}
 )
 
 type ComparisonOperator string

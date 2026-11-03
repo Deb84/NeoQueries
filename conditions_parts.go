@@ -4,19 +4,19 @@ type conditionPart interface {
 	build(*BuildContext) string
 }
 
-type refConditionPart struct {
-	ref *UnbuiltRef
+type refConditionPart[T Reference] struct {
+	ref *UnbuiltRef[T]
 }
 
-func (p *refConditionPart) build(context *BuildContext) string {
+func (p *refConditionPart[T]) build(context *BuildContext) string {
 	return p.ref.buildRef(context).String()
 }
 
-type propConditionPart struct {
-	prop *UnbuiltProp
+type propConditionPart[T Reference] struct {
+	prop *UnbuiltProp[T]
 }
 
-func (p *propConditionPart) build(context *BuildContext) string {
+func (p *propConditionPart[T]) build(context *BuildContext) string {
 	return p.prop.buildRef(context).String()
 }
 

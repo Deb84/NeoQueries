@@ -2,37 +2,37 @@ package neoqueries
 
 import "strings"
 
-type DeleteBuilder struct {
-	elements []Element
+type DeleteBuilder[T Reference] struct {
+	elements []Element[T]
 	query    string
 }
 
-func newBaseDeleteBuilder(query string, element Element, elements []Element) *DeleteBuilder {
-	elements = append([]Element{element}, elements...)
+func newBaseDeleteBuilder[T Reference](query string, element Element[T], elements []Element[T]) *DeleteBuilder[T] {
+	elements = append([]Element[T]{element}, elements...)
 
-	return &DeleteBuilder{
+	return &DeleteBuilder[T]{
 		elements: elements,
 		query:    query,
 	}
 }
 
-func newDeleteBuilder(element Element, elements []Element) *DeleteBuilder {
+func newDeleteBuilder[T Reference](element Element[T], elements []Element[T]) *DeleteBuilder[T] {
 	return newBaseDeleteBuilder("DELETE", element, elements)
 }
 
-func newDetachDeleteBuilder(element Element, elements []Element) *DeleteBuilder {
+func newDetachDeleteBuilder[T Reference](element Element[T], elements []Element[T]) *DeleteBuilder[T] {
 	return newBaseDeleteBuilder("DETACH DELETE", element, elements)
 }
 
-func NewDeleteBuilder(element Element, elements ...Element) *DeleteBuilder {
+func NewDeleteBuilder[T Reference](element Element[T], elements ...Element[T]) *DeleteBuilder[T] {
 	return newBaseDeleteBuilder("DELETE", element, elements)
 }
 
-func NewDetachDeleteBuilder(element Element, elements ...Element) *DeleteBuilder {
+func NewDetachDeleteBuilder[T Reference](element Element[T], elements ...Element[T]) *DeleteBuilder[T] {
 	return newBaseDeleteBuilder("DETACH DELETE", element, elements)
 }
 
-func (b *DeleteBuilder) build(context *BuildContext) string {
+func (b *DeleteBuilder[T]) build(context *BuildContext) string {
 	var s strings.Builder
 
 	s.WriteString(b.query)

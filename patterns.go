@@ -54,41 +54,10 @@ func (p *Pattern) build(context *BuildContext) PatternString {
 	return PatternString(b.String())
 }
 
-type StartPatternState struct {
-	pattern *Pattern
+type patternRefPart[R Reference] struct {
+	ref *UnbuiltRef[R]
 }
 
-func (p *StartPatternState) Node(node *NodePattern) *CompletePatternState {
-	p.pattern.addPart(node)
-	return newCompletePatternState(p.pattern)
-}
-
-type NodePatternState struct {
-	pattern *Pattern
-}
-
-func (p *NodePatternState) Relation(relation *RelationPattern) *RelationPatternState {
-	p.pattern.addPart(relation)
-	return &RelationPatternState{pattern: p.pattern}
-}
-
-type RelationPatternState struct {
-	pattern *Pattern
-}
-
-func (r *RelationPatternState) Node(node *NodePattern) *CompletePatternState {
-	r.pattern.addPart(node)
-	return newCompletePatternState(r.pattern)
-}
-
-type CompletePatternState struct {
-	*Pattern
-	*NodePatternState
-}
-
-func newCompletePatternState(pattern *Pattern) *CompletePatternState {
-	return &CompletePatternState{
-		Pattern:          pattern,
-		NodePatternState: &NodePatternState{pattern},
-	}
+func (p *patternRefPart[R]) build(context *BuildContext) PatternString {
+	return PatternString("(" + p.ref.buildRef(context).String() + ")")
 }

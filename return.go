@@ -24,15 +24,15 @@ func newReturnBuilder[U PropOrRef, T UnbuiltPropOrVar[U]](ref T, refs []T) *Retu
 	return newBaseReturnBuilder(returnBuild[U, T], ref, refs)
 }
 
-func newReturnElementBuilder[T Element](ref T, refs []T) *ReturnBuilder[T] {
-	return newBaseReturnBuilder(returnElementBuild[T], ref, refs)
+func newReturnElementBuilder[R Reference, T Element[R]](ref T, refs []T) *ReturnBuilder[T] {
+	return newBaseReturnBuilder(returnElementBuild[R], ref, refs)
 }
 
 func NewReturnBuilder[U PropOrRef, T UnbuiltPropOrVar[U]](ref T, refs ...T) *ReturnBuilder[T] {
 	return newReturnBuilder(ref, refs)
 }
 
-func NewReturnElementBuilder[T Element](element T, elements ...T) *ReturnBuilder[T] {
+func NewReturnElementBuilder[R Reference, T Element[R]](element T, elements ...T) *ReturnBuilder[T] {
 	return newReturnElementBuilder(element, elements)
 }
 
@@ -57,6 +57,6 @@ func returnBuild[U PropOrRef, T UnbuiltPropOrVar[U]](context *BuildContext, ref 
 	return ref.buildRef(context).String()
 }
 
-func returnElementBuild[T Element](b *BuildContext, element T) string {
+func returnElementBuild[R Reference, T Element[R]](b *BuildContext, element T) string {
 	return element.buildElement(b).String()
 }

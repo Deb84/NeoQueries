@@ -19,13 +19,13 @@ func (c *ConditionStart) ValuePtr[T any](value *T) *AnyState[T] {
 	return &AnyState[T]{builder: c.builder}
 }
 
-func (c *ConditionStart) Prop(value *UnbuiltProp) *StartRef {
-	c.builder.addPart(&propConditionPart{prop: value})
+func (c *ConditionStart) Prop[T Reference](value *UnbuiltProp[T]) *StartRef {
+	c.builder.addPart(&propConditionPart[T]{prop: value})
 	return newStartRef(c.builder)
 }
 
-func (c *ConditionStart) Element(value Element) *StartRef {
-	c.builder.addPart(&refConditionPart{ref: value.GetRef()})
+func (c *ConditionStart) Element[T Reference](value Element[T]) *StartRef {
+	c.builder.addPart(&refConditionPart[T]{ref: value.GetRef()})
 	return newStartRef(c.builder)
 }
 
@@ -76,8 +76,8 @@ type EndString struct {
 	builder *ConditionBuilder
 }
 
-func (p *EndString) Prop(value *UnbuiltProp) *CompleteCondition {
-	p.builder.addPart(&propConditionPart{prop: value})
+func (p *EndString) Prop[T Reference](value *UnbuiltProp[T]) *CompleteCondition {
+	p.builder.addPart(&propConditionPart[T]{prop: value})
 	return &CompleteCondition{p.builder}
 }
 
@@ -144,8 +144,8 @@ func (p *ListState[V]) List(list *List[V]) *CompleteCondition {
 	return &CompleteCondition{p.builder}
 }
 
-func (p *ListState[T]) Prop(value *UnbuiltProp) *CompleteCondition {
-	p.builder.addPart(&propConditionPart{prop: value})
+func (p *ListState[T]) Prop[R Reference](value *UnbuiltProp[R]) *CompleteCondition {
+	p.builder.addPart(&propConditionPart[R]{prop: value})
 	return &CompleteCondition{p.builder}
 }
 
@@ -153,8 +153,8 @@ type Comparison[T any] struct {
 	builder *ConditionBuilder
 }
 
-func (p *Comparison[T]) Prop(value *UnbuiltProp) *CompleteCondition {
-	p.builder.addPart(&propConditionPart{prop: value})
+func (p *Comparison[T]) Prop[R Reference](value *UnbuiltProp[R]) *CompleteCondition {
+	p.builder.addPart(&propConditionPart[R]{prop: value})
 	return &CompleteCondition{p.builder}
 }
 

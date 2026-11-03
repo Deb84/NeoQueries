@@ -14,12 +14,12 @@ type RefConfig struct {
 }
 
 var defaultRefConfig = RefConfig{
-	NodeRef:     NodeRef,
-	RelationRef: RelationRef,
-	TokenRef:    TokenRef,
-	PropsRef:    PropsRef,
-	ListRef:     ListRef,
-	ValueRef:    ValueRef,
+	NodeRef:     DefaultNodeRef,
+	RelationRef: DefaultRelationRef,
+	TokenRef:    DefaultTokenRef,
+	PropsRef:    DefaultPropsRef,
+	ListRef:     DefaultListRef,
+	ValueRef:    DefaultValueRef,
 }
 
 var defaultConfig = Config{

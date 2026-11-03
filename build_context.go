@@ -12,7 +12,7 @@ type Buildable interface {
 	build(builder *BuildContext) string
 }
 
-type builtRefs[T comparable] map[T]Ref
+type builtRefs[T comparable] map[T]refBase
 
 type BuildContext struct {
 	config Config
@@ -53,73 +53,72 @@ func (b *BuildContext) GetParams() Params {
 	return b.params
 }
 
-func storeRefBase(ref Ref, id *int) Ref {
+func storeRefBase[T Reference](ref T, id *int) refBase {
 	*id++
-	return Ref(fmt.Sprintf("%s%d", ref, *id))
+	return refBase(fmt.Sprintf("%s%d", ref.String(), *id))
 }
 
-func storeRef[V comparable](value V, ref Ref, id *int, refMap builtRefs[V]) Ref {
+func storeRef[V comparable, R Reference](value V, ref R, id *int, refMap builtRefs[V]) refBase {
 	if savedRef, ok := refMap[value]; ok {
 		return savedRef
 	}
 
-	ref = storeRefBase(ref, id)
+	r := storeRefBase(ref, id)
 
-	refMap[value] = ref
-	return ref
+	refMap[value] = r
+	return r
 }
 
-func storeAnyRef[V comparable](value V, ref Ref, id *int, refMap builtRefs[any]) Ref {
+func storeAnyRef[V comparable, R Reference](value V, ref R, id *int, refMap builtRefs[any]) refBase {
 	if savedRef, ok := refMap[value]; ok {
 		return savedRef
 	}
 
-	ref = storeRefBase(ref, id)
+	r := storeRefBase(ref, id)
 
-	refMap[value] = ref
-	return ref
+	refMap[value] = r
+	return r
 }
 
-func (b *BuildContext) next[T comparable](obj T, ref Ref, id *int, refMap builtRefs[T]) Ref {
+func (b *BuildContext) next[T comparable, R Reference](obj T, ref R, id *int, refMap builtRefs[T]) refBase {
 	return storeRef(obj, ref, id, refMap)
 }
 
-func (b *BuildContext) nextWithPtr[T comparable](obj T, ref Ref, id *int, refMap builtRefs[any]) Ref {
+func (b *BuildContext) nextWithPtr[T comparable, R Reference](obj T, ref R, id *int, refMap builtRefs[any]) refBase {
 	return storeAnyRef(obj, ref, id, refMap)
 }
 
-func (b *BuildContext) nextWithParams[T comparable](obj T, params any, ref Ref, id *int, refMap builtRefs[T]) Ref {
-	ref = storeRef(obj, ref, id, refMap)
-	b.addToParams(params, ref)
-	return ref
+func (b *BuildContext) nextWithParams[T comparable, R Reference](obj T, params any, ref R, id *int, refMap builtRefs[T]) refBase {
+	r := storeRef(obj, ref, id, refMap)
+	b.addToParams(params, r)
+	return r
 }
 
-func (b *BuildContext) nextWithParamsPtr[T comparable](obj T, params any, ref Ref, id *int, refMap builtRefs[any]) Ref {
-	ref = storeAnyRef(obj, ref, id, refMap)
-	b.addToParams(params, ref)
-	return ref
+func (b *BuildContext) nextWithParamsPtr[T comparable, R Reference](obj T, params any, ref R, id *int, refMap builtRefs[any]) refBase {
+	r := storeAnyRef(obj, ref, id, refMap)
+	b.addToParams(params, r)
+	return r
 }
 
-func (b *BuildContext) addToParams(obj any, ref Ref) {
+func (b *BuildContext) addToParams(obj any, ref refBase) {
 	b.params[ref.String()] = obj
 }
 
-func (b *BuildContext) ensureNodeRef(element *Node) Ref {
-	return b.next(element, b.config.Ref.NodeRef, &b.nodeID, b.nodeRefs)
+func (b *BuildContext) ensureNodeRef(element *Node) NodeRef {
+	return NodeRef{b.next(element, b.config.Ref.NodeRef, &b.nodeID, b.nodeRefs)}
 }
-func (b *BuildContext) ensureRelationRef(element *Relation) Ref {
-	return b.next(element, b.config.Ref.RelationRef, &b.relationID, b.relationRefs)
+func (b *BuildContext) ensureRelationRef(element *Relation) RelationRef {
+	return RelationRef{b.next(element, b.config.Ref.RelationRef, &b.relationID, b.relationRefs)}
 }
 func (b *BuildContext) ensureTokenRef(value string) Ref {
-	return b.nextWithParams(value, value, b.config.Ref.TokenRef, &b.tokenID, b.tokenRefs)
+	return Ref{b.nextWithParams(value, value, b.config.Ref.TokenRef, &b.tokenID, b.tokenRefs)}
 }
 func (b *BuildContext) ensurePropsRef(value *Props) Ref {
-	return b.nextWithParams(value, *value, b.config.Ref.PropsRef, &b.propsID, b.propsRefs)
+	return Ref{b.nextWithParams(value, *value, b.config.Ref.PropsRef, &b.propsID, b.propsRefs)}
 }
 
 func (b *BuildContext) ensureValueRef(value any) Ref {
-	ref := b.nextWithParams(value, value, b.config.Ref.ValueRef, &b.valueID, b.valueRefs)
-	return ref
+	return Ref{b.nextWithParams(value, value, b.config.Ref.ValueRef, &b.valueID, b.valueRefs)}
 }
 
 func (b *BuildContext) ensureValuePtrRef[T any](value *T) Ref {
@@ -131,10 +130,10 @@ func (b *BuildContext) ensureValuePtrRef[T any](value *T) Ref {
 		b.addToParams(*value, ref)
 	}
 
-	return ref
+	return Ref{ref}
 }
 
 // ensureListRef doesn't use b.next() because *List[V] doesn't match with b.next() generic
 func (b *BuildContext) ensureListRef[V any](value *List[V]) Ref {
-	return b.nextWithParamsPtr(value, *value, b.config.Ref.ListRef, &b.listID, b.listRefs)
+	return Ref{b.nextWithParamsPtr(value, *value, b.config.Ref.ListRef, &b.listID, b.listRefs)}
 }

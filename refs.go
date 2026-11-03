@@ -13,10 +13,28 @@ type UnbuiltPropOrVar[T PropOrRef] interface {
 	buildRef(context *BuildContext) T
 }
 
-type Ref string
+type refBase string
 
-func (v Ref) String() string {
+func (v refBase) String() string {
 	return string(v)
+}
+
+// Ref is an exported version of ref to avoid exposing Ref on NodeRef and RelationRef
+type Ref struct {
+	refBase
+}
+
+type NodeRef struct {
+	refBase
+}
+
+type RelationRef struct {
+	refBase
+}
+
+type Reference interface {
+	NodeRef | RelationRef | Ref
+	String() string
 }
 
 type Prop string
@@ -25,37 +43,37 @@ func (p Prop) String() string {
 	return string(p)
 }
 
-type UnbuiltRef struct {
-	owner Element
+type UnbuiltRef[T Reference] struct {
+	owner Element[T]
 }
 
-func newUnbuiltRef(owner Element) *UnbuiltRef {
-	return &UnbuiltRef{
+func newUnbuiltRef[T Reference](owner Element[T]) *UnbuiltRef[T] {
+	return &UnbuiltRef[T]{
 		owner: owner,
 	}
 }
 
-func (r *UnbuiltRef) buildRef(context *BuildContext) Ref {
+func (r *UnbuiltRef[T]) buildRef(context *BuildContext) T {
 	return r.owner.buildElement(context)
 }
 
-func (r *UnbuiltRef) Prop(prop string) *UnbuiltProp {
+func (r *UnbuiltRef[T]) Prop(prop string) *UnbuiltProp[T] {
 	return newProp(r, prop)
 }
 
-type UnbuiltProp struct {
-	variable *UnbuiltRef
+type UnbuiltProp[T Reference] struct {
+	variable *UnbuiltRef[T]
 	prop     string
 }
 
-func newProp(variable *UnbuiltRef, prop string) *UnbuiltProp {
-	return &UnbuiltProp{
+func newProp[T Reference](variable *UnbuiltRef[T], prop string) *UnbuiltProp[T] {
+	return &UnbuiltProp[T]{
 		variable: variable,
 		prop:     prop,
 	}
 }
 
-func (p *UnbuiltProp) buildRef(context *BuildContext) Prop {
+func (p *UnbuiltProp[T]) buildRef(context *BuildContext) Prop {
 	vari := p.variable.buildRef(context)
 
 	template := "%s[$%s]"

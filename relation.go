@@ -1,18 +1,17 @@
 package neoqueries
 
 type Relation struct {
-	ref Ref
+	ref RelationRef
 }
 
 func NewRelation() *Relation {
 	return &Relation{}
 }
 
-func (r *Relation) GetRef() *UnbuiltRef {
+func (r *Relation) GetRef() *UnbuiltRef[RelationRef] {
 	return newUnbuiltRef(r)
 }
 
-func (r *Relation) buildElement(context *BuildContext) Ref {
-	r.ref = context.ensureRelationRef(r)
-	return r.ref
+func (r *Relation) buildElement(context *BuildContext) RelationRef {
+	return context.ensureRelationRef(r)
 }

@@ -31,7 +31,7 @@ func checkConfig(config Config) error {
 		config.Ref.PropsRef,
 		config.Ref.ListRef,
 		config.Ref.ValueRef,
-	}, "") {
+	}, Ref{""}) {
 		return errors.New("ref config can't be empty")
 	}
 	return nil

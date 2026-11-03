@@ -30,12 +30,12 @@ func (qb *QueryBuilder) Create(pattern PatternInterface, patterns ...PatternInte
 	return qb
 }
 
-func (qb *QueryBuilder) Delete(element Element, elements ...Element) *QueryBuilder {
+func (qb *QueryBuilder) Delete[T Reference](element Element[T], elements ...Element[T]) *QueryBuilder {
 	qb.addPart(newDeleteBuilder(element, elements))
 	return qb
 }
 
-func (qb *QueryBuilder) DetachDelete(element Element, elements ...Element) *QueryBuilder {
+func (qb *QueryBuilder) DetachDelete[T Reference](element Element[T], elements ...Element[T]) *QueryBuilder {
 	qb.addPart(newDetachDeleteBuilder(element, elements))
 	return qb
 }
@@ -50,7 +50,7 @@ func (qb *QueryBuilder) Return[U PropOrRef, T UnbuiltPropOrVar[U]](ref T, refs .
 	return qb
 }
 
-func (qb *QueryBuilder) ReturnElement(element Element, elements ...Element) *QueryBuilder {
+func (qb *QueryBuilder) ReturnElement[T Reference](element Element[T], elements ...Element[T]) *QueryBuilder {
 	qb.addPart(newReturnElementBuilder(element, elements))
 	return qb
 }
