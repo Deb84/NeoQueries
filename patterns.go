@@ -8,42 +8,28 @@ func (p PatternString) string() string {
 	return string(p)
 }
 
-type PatternNodeString struct {
-	PatternString
-}
-type PatternRelationString struct {
-	PatternString
-}
-type PatternRefString struct {
-	PatternString
-}
-
-type patternStinger interface {
-	string() string
-}
-
 type PatternBuildInterface interface {
-	build(context *BuildContext) patternStinger
+	build(context *BuildContext) PatternString
 }
 
 // ValidPattern defines the valid Pattern types for the clauses
-type ValidPattern[T patternStinger] interface {
+type ValidPattern interface {
 	*NodePattern | *PatternRefPart[NodeRef] | *PatternRefPart[RelationRef] | *CompletePatternState
-	build(context *BuildContext) T
+	build(context *BuildContext) PatternString
 }
 
-// PatternAdapter convert a patternStinger from a ValidPattern to a patternStinger
-type PatternAdapter[S patternStinger, T ValidPattern[S]] struct {
-	pattern T
-}
-
-func (p PatternAdapter[S, T]) build(context *BuildContext) patternStinger {
-	return p.pattern.build(context)
+func IsAValidPattern(pattern PatternBuildInterface) bool {
+	switch pattern.(type) {
+	case *NodePattern, *PatternRefPart[NodeRef], *PatternRefPart[RelationRef], *CompletePatternState:
+		return true
+	default:
+		return false
+	}
 }
 
 // Pattern implements a neo4j pattern
 type Pattern struct {
-	parts []patternPartBuildInterface
+	parts []patternPartInterface
 }
 
 func NewPattern() *StartPatternState {
@@ -53,7 +39,7 @@ func NewPattern() *StartPatternState {
 	}
 }
 
-func (p *Pattern) addPart(part patternPartBuildInterface) {
+func (p *Pattern) addPart(part patternPartInterface) {
 	p.parts = append(p.parts, part)
 }
 

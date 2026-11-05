@@ -1,6 +1,8 @@
 package neoqueries
 
 import (
+	"fmt"
+	"reflect"
 	"strings"
 )
 
@@ -8,18 +10,22 @@ type MatchBuilder struct {
 	patterns []PatternBuildInterface
 }
 
-func newMatchBuilder[S patternStinger, T ValidPattern[S]](pattern T, patterns []PatternBuildInterface) *MatchBuilder {
-	patterns = append([]PatternBuildInterface{PatternAdapter[S, T]{pattern}}, patterns...)
+func newMatchBuilder[T ValidPattern](pattern T, patterns []PatternBuildInterface) *MatchBuilder {
+	// Return an error if a pattern from patterns is not a ValidPattern
+	for _, p := range patterns {
+		if !IsAValidPattern(p) {
+			panic(fmt.Sprintf("%s is not a valid Pattern", reflect.TypeOf(p)))
+		}
+	}
+
+	patterns = append([]PatternBuildInterface{pattern}, patterns...)
 
 	return &MatchBuilder{
 		patterns: patterns,
 	}
 }
 
-func NewMatchBuilder[S patternStinger, T ValidPattern[S]](
-	pattern T,
-	patterns ...PatternBuildInterface,
-) *MatchBuilder {
+func NewMatchBuilder[T ValidPattern](pattern T, patterns ...PatternBuildInterface) *MatchBuilder {
 	return newMatchBuilder(pattern, patterns)
 }
 

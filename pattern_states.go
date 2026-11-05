@@ -5,12 +5,12 @@ type StartPatternState struct {
 }
 
 func (p *StartPatternState) Node(node *NodePattern) *CompletePatternState {
-	p.pattern.addPart(patternPartAdapter[PatternNodeString]{part: node})
+	p.pattern.addPart(node)
 	return newCompletePatternState(p.pattern)
 }
 
 func (p *StartPatternState) NodeRef(ref *UnbuiltRef[NodeRef]) *CompletePatternState {
-	p.pattern.addPart(patternPartAdapter[PatternRefString]{part: &PatternRefPart[NodeRef]{ref}})
+	p.pattern.addPart(&PatternRefPart[NodeRef]{ref})
 	return newCompletePatternState(p.pattern)
 }
 
@@ -19,12 +19,20 @@ type NodePatternState struct {
 }
 
 func (p *NodePatternState) Relation(relation *RelationPattern) *RelationPatternState {
-	p.pattern.addPart(patternPartAdapter[PatternRelationString]{part: relation})
+	p.pattern.addPart(&RelationPatternPart[*RelationPattern]{
+		pattern:   relation,
+		direction: relation.direction,
+	})
 	return &RelationPatternState{pattern: p.pattern}
 }
 
-func (p *NodePatternState) RelationRef(ref *UnbuiltRef[RelationRef]) *RelationPatternState {
-	p.pattern.addPart(patternPartAdapter[PatternRefString]{part: &PatternRefPart[RelationRef]{ref}})
+func (p *NodePatternState) RelationRef(ref *UnbuiltRef[RelationRef], direction RelationDirectionString) *RelationPatternState {
+	part := &RelationPatternPart[*RelationRefPattern]{
+		pattern:   &RelationRefPattern{ref},
+		direction: direction,
+	}
+
+	p.pattern.addPart(part)
 	return &RelationPatternState{pattern: p.pattern}
 }
 
@@ -33,12 +41,12 @@ type RelationPatternState struct {
 }
 
 func (p *RelationPatternState) Node(node *NodePattern) *CompletePatternState {
-	p.pattern.addPart(patternPartAdapter[PatternNodeString]{part: node})
+	p.pattern.addPart(node)
 	return newCompletePatternState(p.pattern)
 }
 
 func (p *RelationPatternState) NodeRef(ref *UnbuiltRef[NodeRef]) *CompletePatternState {
-	p.pattern.addPart(patternPartAdapter[PatternRefString]{part: &PatternRefPart[NodeRef]{ref}})
+	p.pattern.addPart(&PatternRefPart[NodeRef]{ref})
 	return newCompletePatternState(p.pattern)
 }
 

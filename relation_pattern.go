@@ -5,6 +5,11 @@ import (
 	"strings"
 )
 
+type ValidRelationPattern interface {
+	*RelationPattern | *RelationRefPattern
+	build(context *BuildContext) PatternString
+}
+
 type RelationPattern struct {
 	*patternPart
 	relation  *Relation
@@ -24,6 +29,10 @@ func (p *RelationPattern) GetRelation() *Relation {
 	return p.relation
 }
 
+func (p *RelationPattern) GetDirection() RelationDirectionString {
+	return p.direction
+}
+
 func (p *RelationPattern) Type(token string) *RelationPattern {
 	p.token = token
 	return p
@@ -34,15 +43,13 @@ func (p *RelationPattern) Props(props *Props) *RelationPattern {
 	return p
 }
 
-func (p *RelationPattern) build(context *BuildContext) PatternRelationString {
+func (p *RelationPattern) build(context *BuildContext) PatternString {
 	tokenTemplate := ":$($%s)"
 
 	relationRef := p.relation.buildElement(context)
 
 	var b strings.Builder
 
-	b.WriteString(p.direction.Left)
-	b.WriteByte('[')
 	b.WriteString(relationRef.String())
 
 	if p.token != "" {
@@ -56,9 +63,22 @@ func (p *RelationPattern) build(context *BuildContext) PatternRelationString {
 		b.WriteString(" $" + propsRef.String())
 	}
 
-	b.WriteByte(']')
-	b.WriteString(p.direction.Right)
+	return PatternString(b.String())
+}
 
-	patternString := PatternString(b.String())
-	return PatternRelationString{patternString}
+type RelationRefPattern struct {
+	ref *UnbuiltRef[RelationRef]
+}
+
+func (p *RelationRefPattern) build(context *BuildContext) PatternString {
+	return PatternString(p.ref.buildRef(context).String())
+}
+
+type RelationPatternPart[T ValidRelationPattern] struct {
+	pattern   T
+	direction RelationDirectionString
+}
+
+func (p *RelationPatternPart[T]) build(context *BuildContext) PatternString {
+	return PatternString(p.direction.Left + "[" + p.pattern.build(context).string() + "]" + p.direction.Right)
 }

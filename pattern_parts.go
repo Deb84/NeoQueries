@@ -1,19 +1,7 @@
 package neoqueries
 
-type patternPartInterface[T patternStinger] interface {
-	build(context *BuildContext) T
-}
-
-type patternPartBuildInterface interface {
-	build(context *BuildContext) patternStinger
-}
-
-type patternPartAdapter[T patternStinger] struct {
-	part patternPartInterface[T]
-}
-
-func (p patternPartAdapter[T]) build(context *BuildContext) patternStinger {
-	return p.part.build(context)
+type patternPartInterface interface {
+	build(context *BuildContext) PatternString
 }
 
 type patternPart struct {
@@ -34,7 +22,7 @@ type PatternRefPart[R Reference] struct {
 	ref *UnbuiltRef[R]
 }
 
-func (p *PatternRefPart[R]) build(context *BuildContext) PatternRefString {
+func (p *PatternRefPart[R]) build(context *BuildContext) PatternString {
 	ref := "(" + p.ref.buildRef(context).String() + ")"
-	return PatternRefString{PatternString(ref)}
+	return PatternString(ref)
 }

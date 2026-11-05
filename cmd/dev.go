@@ -50,16 +50,19 @@ func CreateRelationQuery(relation *Relation) *neoqueries.QueryBuilder {
 	r1 := neoqueries.NewRelationPattern(neoqueries.RelationTo)
 	_ = r1
 
-	neoqueries.NewQueryBuilder().
-		Match(n1)
+	p := neoqueries.NewPattern().
+		Node(n1).
+		Relation(r1).
+		Node(n2)
+
+	p2 := neoqueries.NewPattern().
+		NodeRef(n1.GetNode().GetRef()).
+		RelationRef(r1.GetRelation().GetRef(), r1.GetDirection()).
+		NodeRef(n2.GetNode().GetRef())
 
 	return neoqueries.NewQueryBuilder().
-		Match(n1).
-		Match(n2).
-		Create(neoqueries.NewPattern().
-			NodeRef(n1.GetNode().GetRef()).
-			Relation(newRelationPattern(relation)).
-			NodeRef(n2.GetNode().GetRef()))
+		Match(n1, n2, p2).
+		Create(p)
 }
 
 func main() {

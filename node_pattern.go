@@ -52,9 +52,9 @@ func (p *NodePattern) buildLabels(context *BuildContext) string {
 	return b.String()
 }
 
-func (p *NodePattern) build(context *BuildContext) PatternNodeString {
+func (p *NodePattern) build(context *BuildContext) PatternString {
 	if p.empty {
-		return PatternNodeString{"()"}
+		return "()"
 	}
 
 	var b strings.Builder
@@ -72,6 +72,5 @@ func (p *NodePattern) build(context *BuildContext) PatternNodeString {
 
 	b.WriteByte(')')
 
-	patternString := PatternString(b.String())
-	return PatternNodeString{patternString}
+	return PatternString(b.String())
 }
