@@ -5,18 +5,21 @@ import (
 )
 
 type MatchBuilder struct {
-	patterns []PatternInterface
+	patterns []PatternBuildInterface
 }
 
-func newMatchBuilder(pattern PatternInterface, patterns []PatternInterface) *MatchBuilder {
-	patterns = append([]PatternInterface{pattern}, patterns...)
+func newMatchBuilder[S ValidPatternString, T ValidPattern[S]](pattern T, patterns []PatternBuildInterface) *MatchBuilder {
+	patterns = append([]PatternBuildInterface{PatternAdapter[S, T]{pattern}}, patterns...)
 
 	return &MatchBuilder{
 		patterns: patterns,
 	}
 }
 
-func NewMatchBuilder(pattern PatternInterface, patterns ...PatternInterface) *MatchBuilder {
+func NewMatchBuilder[S ValidPatternString, T ValidPattern[S]](
+	pattern T,
+	patterns ...PatternBuildInterface,
+) *MatchBuilder {
 	return newMatchBuilder(pattern, patterns)
 }
 

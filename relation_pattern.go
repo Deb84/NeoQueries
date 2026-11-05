@@ -34,7 +34,7 @@ func (p *RelationPattern) Props(props *Props) *RelationPattern {
 	return p
 }
 
-func (p *RelationPattern) build(context *BuildContext) PatternString {
+func (p *RelationPattern) build(context *BuildContext) PatternRelationString {
 	tokenTemplate := ":$($%s)"
 
 	relationRef := p.relation.buildElement(context)
@@ -59,5 +59,6 @@ func (p *RelationPattern) build(context *BuildContext) PatternString {
 	b.WriteByte(']')
 	b.WriteString(p.direction.Right)
 
-	return PatternString(b.String())
+	patternString := PatternString(b.String())
+	return PatternRelationString{patternString}
 }

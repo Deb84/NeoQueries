@@ -5,18 +5,18 @@ import (
 )
 
 type CreateBuilder struct {
-	patterns []PatternInterface
+	patterns []PatternBuildInterface
 }
 
-func newCreateBuilder(pattern PatternInterface, patterns []PatternInterface) *CreateBuilder {
-	patterns = append([]PatternInterface{pattern}, patterns...)
+func newCreateBuilder[S ValidPatternString, T ValidPattern[S]](pattern T, patterns []PatternBuildInterface) *CreateBuilder {
+	patterns = append([]PatternBuildInterface{PatternAdapter[S, T]{pattern}}, patterns...)
 
 	return &CreateBuilder{
 		patterns: patterns,
 	}
 }
 
-func NewCreateBuilder(element PatternInterface, elements ...PatternInterface) *CreateBuilder {
+func NewCreateBuilder[S ValidPatternString, T ValidPattern[S]](element T, elements ...PatternBuildInterface) *CreateBuilder {
 	return newCreateBuilder(element, elements)
 }
 

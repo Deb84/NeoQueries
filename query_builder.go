@@ -25,7 +25,7 @@ func (qb *QueryBuilder) addPart(part Buildable) {
 	qb.parts = append(qb.parts, part)
 }
 
-func (qb *QueryBuilder) Create(pattern PatternInterface, patterns ...PatternInterface) *QueryBuilder {
+func (qb *QueryBuilder) Create[S ValidPatternString, T ValidPattern[S]](pattern T, patterns ...PatternBuildInterface) *QueryBuilder {
 	qb.addPart(newCreateBuilder(pattern, patterns))
 	return qb
 }
@@ -40,7 +40,7 @@ func (qb *QueryBuilder) DetachDelete[T Reference](element Element[T], elements .
 	return qb
 }
 
-func (qb *QueryBuilder) Match(pattern PatternInterface, patterns ...PatternInterface) *QueryBuilder {
+func (qb *QueryBuilder) Match[S ValidPatternString, T ValidPattern[S]](pattern T, patterns ...PatternBuildInterface) *QueryBuilder {
 	qb.addPart(newMatchBuilder(pattern, patterns))
 	return qb
 }

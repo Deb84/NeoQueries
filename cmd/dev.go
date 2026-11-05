@@ -47,6 +47,11 @@ func newRelationPattern(relation *Relation) *neoqueries.RelationPattern {
 func CreateRelationQuery(relation *Relation) *neoqueries.QueryBuilder {
 	n1 := newNodePattern(relation.N1)
 	n2 := newNodePattern(relation.N2)
+	r1 := neoqueries.NewRelationPattern(neoqueries.RelationTo)
+	_ = r1
+
+	neoqueries.NewQueryBuilder().
+		Match(n1)
 
 	return neoqueries.NewQueryBuilder().
 		Match(n1).

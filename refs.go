@@ -4,11 +4,13 @@ import (
 	"fmt"
 )
 
+// PropOrRef defines a constraint for types that are either a Prop or a Ref
 type PropOrRef interface {
 	Prop | Ref
 	String() string
 }
 
+// UnbuiltPropOrVar defines an unbuilt PropOrRef constraint
 type UnbuiltPropOrVar[T PropOrRef] interface {
 	buildRef(context *BuildContext) T
 }
@@ -32,17 +34,20 @@ type RelationRef struct {
 	refBase
 }
 
+// Reference defines a constraint for types that are either A Ref, NodeRef or RelationRef
 type Reference interface {
 	NodeRef | RelationRef | Ref
 	String() string
 }
 
+// Prop is a representation of neo4j prop
 type Prop string
 
 func (p Prop) String() string {
 	return string(p)
 }
 
+// UnbuiltRef represents a Ref which will be built at build
 type UnbuiltRef[T Reference] struct {
 	owner Element[T]
 }
@@ -61,6 +66,7 @@ func (r *UnbuiltRef[T]) Prop(prop string) *UnbuiltProp[T] {
 	return newProp(r, prop)
 }
 
+// UnbuiltProp represents a Prop which will be built at build
 type UnbuiltProp[T Reference] struct {
 	variable *UnbuiltRef[T]
 	prop     string
