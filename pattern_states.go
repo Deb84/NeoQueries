@@ -10,7 +10,7 @@ func (p *StartPatternState) Node(node *NodePattern) *CompletePatternState {
 }
 
 func (p *StartPatternState) NodeRef(ref *UnbuiltRef[NodeRef]) *CompletePatternState {
-	p.pattern.addPart(patternPartAdapter[PatternRefString[NodeRef]]{part: &PatternRefPart[NodeRef]{ref}})
+	p.pattern.addPart(patternPartAdapter[PatternRefString]{part: &PatternRefPart[NodeRef]{ref}})
 	return newCompletePatternState(p.pattern)
 }
 
@@ -24,7 +24,7 @@ func (p *NodePatternState) Relation(relation *RelationPattern) *RelationPatternS
 }
 
 func (p *NodePatternState) RelationRef(ref *UnbuiltRef[RelationRef]) *RelationPatternState {
-	p.pattern.addPart(patternPartAdapter[PatternRefString[RelationRef]]{part: &PatternRefPart[RelationRef]{ref}})
+	p.pattern.addPart(patternPartAdapter[PatternRefString]{part: &PatternRefPart[RelationRef]{ref}})
 	return &RelationPatternState{pattern: p.pattern}
 }
 
@@ -38,7 +38,7 @@ func (p *RelationPatternState) Node(node *NodePattern) *CompletePatternState {
 }
 
 func (p *RelationPatternState) NodeRef(ref *UnbuiltRef[NodeRef]) *CompletePatternState {
-	p.pattern.addPart(patternPartAdapter[PatternRefString[NodeRef]]{part: &PatternRefPart[NodeRef]{ref}})
+	p.pattern.addPart(patternPartAdapter[PatternRefString]{part: &PatternRefPart[NodeRef]{ref}})
 	return newCompletePatternState(p.pattern)
 }
 

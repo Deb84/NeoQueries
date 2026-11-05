@@ -14,7 +14,7 @@ type PatternNodeString struct {
 type PatternRelationString struct {
 	PatternString
 }
-type PatternRefString[T Reference] struct {
+type PatternRefString struct {
 	PatternString
 }
 
