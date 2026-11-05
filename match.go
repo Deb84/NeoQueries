@@ -8,7 +8,7 @@ type MatchBuilder struct {
 	patterns []PatternBuildInterface
 }
 
-func newMatchBuilder[S ValidPatternString, T ValidPattern[S]](pattern T, patterns []PatternBuildInterface) *MatchBuilder {
+func newMatchBuilder[S patternStinger, T ValidPattern[S]](pattern T, patterns []PatternBuildInterface) *MatchBuilder {
 	patterns = append([]PatternBuildInterface{PatternAdapter[S, T]{pattern}}, patterns...)
 
 	return &MatchBuilder{
@@ -16,7 +16,7 @@ func newMatchBuilder[S ValidPatternString, T ValidPattern[S]](pattern T, pattern
 	}
 }
 
-func NewMatchBuilder[S ValidPatternString, T ValidPattern[S]](
+func NewMatchBuilder[S patternStinger, T ValidPattern[S]](
 	pattern T,
 	patterns ...PatternBuildInterface,
 ) *MatchBuilder {

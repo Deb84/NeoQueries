@@ -8,7 +8,7 @@ type CreateBuilder struct {
 	patterns []PatternBuildInterface
 }
 
-func newCreateBuilder[S ValidPatternString, T ValidPattern[S]](pattern T, patterns []PatternBuildInterface) *CreateBuilder {
+func newCreateBuilder[S patternStinger, T ValidPattern[S]](pattern T, patterns []PatternBuildInterface) *CreateBuilder {
 	patterns = append([]PatternBuildInterface{PatternAdapter[S, T]{pattern}}, patterns...)
 
 	return &CreateBuilder{
@@ -16,7 +16,7 @@ func newCreateBuilder[S ValidPatternString, T ValidPattern[S]](pattern T, patter
 	}
 }
 
-func NewCreateBuilder[S ValidPatternString, T ValidPattern[S]](element T, elements ...PatternBuildInterface) *CreateBuilder {
+func NewCreateBuilder[S patternStinger, T ValidPattern[S]](element T, elements ...PatternBuildInterface) *CreateBuilder {
 	return newCreateBuilder(element, elements)
 }
 

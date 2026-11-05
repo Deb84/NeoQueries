@@ -26,20 +26,14 @@ type PatternBuildInterface interface {
 	build(context *BuildContext) patternStinger
 }
 
-// ValidPatternString defines the valid PatternString types for a ValidPattern
-type ValidPatternString interface {
-	patternStinger
-	PatternString | PatternNodeString | PatternRefString[NodeRef]
-}
-
 // ValidPattern defines the valid Pattern types for the clauses
-type ValidPattern[T ValidPatternString] interface {
-	*Pattern | *NodePattern | *PatternRefPart[NodeRef] | *PatternRefPart[RelationRef] | *CompletePatternState
+type ValidPattern[T patternStinger] interface {
+	*NodePattern | *PatternRefPart[NodeRef] | *PatternRefPart[RelationRef] | *CompletePatternState
 	build(context *BuildContext) T
 }
 
-// PatternAdapter convert a ValidPatternString from a ValidPattern to a patternStinger
-type PatternAdapter[S ValidPatternString, T ValidPattern[S]] struct {
+// PatternAdapter convert a patternStinger from a ValidPattern to a patternStinger
+type PatternAdapter[S patternStinger, T ValidPattern[S]] struct {
 	pattern T
 }
 
